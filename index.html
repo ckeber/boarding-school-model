@@ -1,367 +1,257 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boarding School Model v24</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<h2 class="sr-only">Boarding school rankings v25 — boys swimming added as 15th criterion at weight 4</h2>
 <style>
-:root{--cr:#F7F4EE;--cd:#EDE9DF;--ink:#1A1917;--inl:#4A4845;--inf:#8A8784;--gn:#1D6B4A;--gl:#E4F0EA;--bl:#1B4F8A;--bll:#E4EDF7;--am:#8A5A1A;--aml:#F5ECD8;--rd:#8A2020;--rdl:#F5E0E0;--br:#D8D3C8;--brl:#EDE9DF;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--cr);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;font-size:14px;min-height:100vh}
-.hdr{background:var(--ink);color:var(--cr);padding:40px 56px 36px;position:relative;overflow:hidden}
-.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:1px solid rgba(247,244,238,.07);border-radius:50%}
-.hdr::after{content:'';position:absolute;bottom:-70px;right:90px;width:180px;height:180px;border:1px solid rgba(247,244,238,.04);border-radius:50%}
-.hdr-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(247,244,238,.45);margin-bottom:14px}
-.hdr h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:500;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px}
-.hdr-sub{font-size:13px;color:rgba(247,244,238,.55);font-weight:300;max-width:480px;line-height:1.6}
-.hdr-meta{display:flex;gap:28px;margin-top:24px;flex-wrap:wrap}
-.hm-val{font-family:'Playfair Display',serif;font-size:20px}
-.hm-lbl{font-size:10px;color:rgba(247,244,238,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
-nav{background:var(--cd);border-bottom:1px solid var(--br);padding:0 56px;display:flex;gap:0;position:sticky;top:0;z-index:100;overflow-x:auto}
-.nb{padding:13px 18px;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--inf);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
-.nb.on{color:var(--ink);border-bottom-color:var(--ink)}
-.nb:hover{color:var(--ink)}
-.sec{display:none;padding:40px 56px}
-.sec.on{display:block}
-.stitle{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;margin-bottom:4px}
-.ssub{font-size:12px;color:var(--inf);margin-bottom:28px;font-weight:300}
-
-/* RANKINGS */
-.rl{display:flex;flex-direction:column;gap:5px}
-.rc{background:#fff;border:1px solid var(--br);border-radius:5px;padding:14px 18px;display:grid;grid-template-columns:34px 1fr 90px 90px 160px;align-items:center;gap:14px;transition:box-shadow .15s;cursor:default}
-.rc:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.rc.t1{border-left:3px solid var(--gn)}
-.rc.t2{border-left:3px solid var(--bl)}
-.rc.t3{border-left:3px solid var(--am)}
-.rn{font-family:'Playfair Display',serif;font-size:20px;color:var(--inf);text-align:center}
-.rname{font-weight:500;font-size:14px}
-.rmeta{font-size:10px;color:var(--inf);margin-top:2px}
-.rpill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px;text-align:center}
-.t1p{background:var(--gl);color:var(--gn)}
-.t2p{background:var(--bll);color:var(--bl)}
-.t3p{background:var(--aml);color:var(--am)}
-.rtrav{font-size:11px;text-align:center}
-.rtscore{font-weight:500}
-.rtroute{font-size:10px;color:var(--inf)}
-.rscore-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:400}
-.rscore-b{height:3px;background:var(--brl);border-radius:2px;margin-top:3px}
-.rscore-f{height:100%;border-radius:2px}
-
-/* MATRIX */
-.mscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{border-collapse:separate;border-spacing:0;font-size:11px;min-width:980px;width:100%}
-th{font-weight:500;color:var(--inf);text-align:center;padding:7px 5px;background:var(--cd);border-bottom:1px solid var(--br);vertical-align:bottom;line-height:1.25;font-size:10px;letter-spacing:.02em;white-space:nowrap}
-td{text-align:center;padding:6px 4px;border-bottom:1px solid var(--brl);background:#fff}
-tr:hover td{background:var(--cr)}
-tr:hover td.sk{background:var(--cr)}
-.sk{position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--br);text-align:left;padding-left:10px;min-width:120px}
-th.sk{background:var(--cd);z-index:3}
-.cell{display:inline-flex;align-items:center;justify-content:center;width:22px;height:18px;border-radius:3px;font-weight:500;font-size:11px;font-family:'DM Mono',monospace}
-.cg{background:#DFF0D4;color:#1A5C0A}
-.cb{background:var(--bll);color:var(--bl)}
-.cw{background:var(--cd);color:var(--inl)}
-.cr{background:var(--rdl);color:var(--rd)}
-.cn{background:var(--aml);color:var(--am)}
-.dl{border-left:1px solid var(--br)}
-.sn{font-weight:500;font-size:12px}
-.sl{font-size:10px;color:var(--inf)}
-.sc{font-family:'Playfair Display',serif;font-size:17px;font-weight:500}
-.tip{position:relative;cursor:help}
-.tip:hover .tb{display:block}
-.tb{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cr);padding:8px 10px;border-radius:4px;font-size:10px;width:200px;z-index:99;line-height:1.5;text-align:left;font-weight:300;white-space:normal;pointer-events:none}
-
-/* WEIGHTS */
-.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.wcard{background:#fff;border:1px solid var(--br);border-radius:5px;padding:20px 22px}
-.wcat{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
-.wr{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
-.wl{flex:1}
-.wn{font-size:12px;font-weight:400}
-.ws{font-size:11px;color:var(--inf);margin-top:2px;line-height:1.4}
-.wri{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
-.wnum{font-family:'DM Mono',monospace;font-size:14px;font-weight:500}
-.wbar{width:72px;height:3px;background:var(--brl);border-radius:2px}
+.outer{padding:1rem 0;font-family:var(--font-sans)}
+.section-title{font-size:15px;font-weight:500;margin-bottom:1rem;color:var(--color-text-primary)}
+.section-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:2rem 0}
+.rt{width:100%;border-collapse:collapse}
+.rt th{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.rt td{font-size:12px;padding:9px 10px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle}
+.rt tr:last-child td{border-bottom:none}
+.rt tr:hover td{background:var(--color-background-secondary)}
+.score-bar{height:5px;border-radius:3px;background:var(--color-background-secondary);margin-top:3px;width:70px}
+.score-fill{height:100%;border-radius:3px}
+.pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px}
+.t1{background:#E1F5EE;color:#085041}
+.t2{background:#E6F1FB;color:#0C447C}
+.t3{background:#FAEEDA;color:#633806}
+.delta{font-size:10px;color:var(--color-text-tertiary);margin-left:4px}
+.travel-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:99px;margin-left:4px;font-weight:500}
+.new-tag{font-size:10px;padding:1px 5px;border-radius:99px;margin-left:5px;background:#E1F5EE;color:#085041}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.wcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.wcat{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem}
+.wrow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.wlabel{flex:1;min-width:0}
+.wname{font-size:12px;color:var(--color-text-primary);line-height:1.3}
+.wsub{font-size:10px;color:var(--color-text-secondary);margin-top:1px;line-height:1.4}
+.wright{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.wnum{font-size:13px;font-weight:500;color:var(--color-text-info)}
+.wbar{width:80px;height:4px;background:var(--color-background-secondary);border-radius:2px}
 .wfill{height:100%;border-radius:2px}
-.wtot{display:flex;justify-content:space-between;padding-top:10px;margin-top:2px;border-top:1px solid var(--brl);font-size:11px;color:var(--inf)}
-
-/* METHODOLOGY */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.mcard{background:#fff;border:1px solid var(--br);border-radius:5px;padding:20px 22px}
-.mtitle{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:8px}
-.mbody{font-size:12px;color:var(--inl);line-height:1.7;font-weight:300}
-.formula-box{background:var(--ink);color:var(--cr);padding:16px 20px;border-radius:5px;margin-bottom:20px;font-family:'DM Mono',monospace;font-size:12px;line-height:1.6}
-.scale-box{background:#fff;border:1px solid var(--br);border-radius:5px;padding:16px 20px;margin-bottom:20px;display:flex;gap:24px;flex-wrap:wrap;align-items:center}
-.scale-row{display:flex;align-items:center;gap:8px;font-size:11px}
-.sw{width:28px;height:14px;border-radius:2px}
-
-.ftr{background:var(--ink);color:rgba(247,244,238,.35);padding:20px 56px;font-size:10px;display:flex;justify-content:space-between;align-items:center;margin-top:40px;flex-wrap:wrap;gap:6px}
-
-@media(max-width:800px){
-  .hdr,.sec,nav{padding-left:20px;padding-right:20px}
-  .wgrid,.mgrid{grid-template-columns:1fr}
-  .rc{grid-template-columns:28px 1fr 60px}
-  .rpill,.rtrav{display:none}
-}
+.wtotal{display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;border-top:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-secondary)}
+.wsummary{margin-top:1rem;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:11px;color:var(--color-text-tertiary);line-height:1.7}
+.tooltip{position:relative;cursor:help}
+.tooltip:hover .tip{display:block}
+.tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 10px;font-size:11px;color:var(--color-text-primary);white-space:normal;width:220px;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,0.12);text-align:left;line-height:1.5}
 </style>
-</head>
-<body>
 
-<div class="hdr">
-  <div class="hdr-eye">Private Research · Fall 2027 Entry · Quogue NY</div>
-  <h1>Boarding School<br>Ranking Model</h1>
-  <div class="hdr-sub">A weighted scoring model across 14 criteria evaluating 13 US boarding schools. Built from verified public data. Travel times from Quogue NY.</div>
-  <div class="hdr-meta">
-    <div><div class="hm-val">13</div><div class="hm-lbl">Schools</div></div>
-    <div><div class="hm-val">14</div><div class="hm-lbl">Criteria</div></div>
-    <div><div class="hm-val">103</div><div class="hm-lbl">Weight pts</div></div>
-    <div><div class="hm-val">v24</div><div class="hm-lbl">Version</div></div>
-  </div>
-</div>
+<div class="outer">
 
-<nav>
-  <button class="nb on" onclick="show('rankings',this)">Rankings</button>
-  <button class="nb" onclick="show('matrix',this)">Full Matrix</button>
-  <button class="nb" onclick="show('weights',this)">Weights</button>
-  <button class="nb" onclick="show('method',this)">Methodology</button>
-</nav>
+<div class="section-title">Rankings <span style="font-size:12px;font-weight:400;color:var(--color-text-secondary)">v25 · boys swimming added · 15 criteria · 111 pts</span></div>
+<div class="section-sub">Ranked by weighted score · scores out of 100 · hover swim column for evidence</div>
 
-<div class="sec on" id="rankings">
-  <div class="stitle">School Rankings</div>
-  <div class="ssub">Weighted score out of 100 · 14 criteria · 103 weight points · v24</div>
-  <div class="rl" id="rl"></div>
-</div>
+<table class="rt">
+  <thead>
+    <tr>
+      <th style="width:28px">#</th>
+      <th>School</th>
+      <th style="width:60px">Tier</th>
+      <th style="width:90px">Travel</th>
+      <th style="width:110px">Swim (boys)</th>
+      <th style="width:110px">Score</th>
+    </tr>
+  </thead>
+  <tbody id="ranking-body"></tbody>
+</table>
 
-<div class="sec" id="matrix">
-  <div class="stitle">Full Scoring Matrix</div>
-  <div class="ssub">All 13 schools × 14 criteria · scroll right · hover cells for detail</div>
-  <div class="mscroll"><table><thead id="mh"></thead><tbody id="mb"></tbody></table></div>
-</div>
+<div class="divider"></div>
 
-<div class="sec" id="weights">
-  <div class="stitle">Criteria & Weights</div>
-  <div class="ssub">14 criteria · 103 total weight points · bar shows weight relative to max (10)</div>
-  <div class="wgrid" id="wg"></div>
-</div>
+<div class="section-title">Criteria & weights <span style="font-size:12px;font-weight:400;color:var(--color-text-secondary)">v25 · 15 criteria · 111 pts</span></div>
+<div class="wgrid" id="weight-grid"></div>
+<div class="wsummary" id="wsummary"></div>
 
-<div class="sec" id="method">
-  <div class="stitle">Methodology</div>
-  <div class="ssub">All 14 criteria explained — data sources, scoring scales, and rationale</div>
-
-  <div class="formula-box">
-    Score = Σ(criterion_score × weight) ÷ Σ(10 × weight) × 100<br>
-    <span style="color:rgba(247,244,238,.5);font-size:11px">Normalises to 0–100 regardless of criteria count or total weight. Tier 1 ≥60 · Tier 2 50–59 · Tier 3 &lt;50</span>
-  </div>
-
-  <div class="scale-box">
-    <span style="font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--inf);margin-right:4px">Score scale</span>
-    <div class="scale-row"><div class="sw" style="background:#DFF0D4"></div>9–10 Strong</div>
-    <div class="scale-row"><div class="sw" style="background:var(--bll)"></div>7–8 Good</div>
-    <div class="scale-row"><div class="sw" style="background:var(--cd)"></div>5–6 Adequate</div>
-    <div class="scale-row"><div class="sw" style="background:var(--rdl)"></div>1–4 Weak</div>
-    <div class="scale-row"><div class="sw" style="background:var(--aml)"></div>New v24</div>
-  </div>
-
-  <div class="mgrid" id="mg"></div>
-</div>
-
-<div class="ftr">
-  <span>Boarding School Model v24 · 13 schools · 14 criteria · 103 weight points</span>
-  <span>Eaglebrook families · Fall 2027 entry · Quogue NY origin</span>
 </div>
 
 <script>
-// ── HELPERS ──────────────────────────────────────────────────────────────────
 function eS(n){if(n>=550&&n<=800)return 10;if(n>=500&&n<=849)return 9;if(n>=450&&n<=899)return 7;if(n>=400&&n<=949)return 5;if(n>=350&&n<=1049)return 4;return 3;}
 function cS(p){if(p<23)return 10;if(p<28)return 9;if(p<33)return 8;if(p<38)return 7;if(p<43)return 6;if(p<48)return 5;if(p<53)return 4;if(p<58)return 3;return 2;}
 
-// ── LOOKUP TABLES ─────────────────────────────────────────────────────────────
 const EB={Exeter:6,Andover:7,"St. Paul's":8,Deerfield:10,Hotchkiss:7,Choate:9,Lawrenceville:5,Taft:4,Loomis:6,Westminster:7,"St. George's":3,Hill:4,Salisbury:2};
 const TS={Lawrenceville:9,Choate:8,Taft:8,"St. George's":7,Westminster:7,Loomis:7,Hill:6,Hotchkiss:6,Salisbury:6,Deerfield:4,Andover:3,Exeter:2,"St. Paul's":1};
 const TT={Lawrenceville:"2h18",Choate:"2h46",Taft:"3h02","St. George's":"3h19",Westminster:"3h22",Loomis:"3h26",Hill:"3h18",Hotchkiss:"3h30",Salisbury:"3h38",Deerfield:"4h13",Andover:"4h53",Exeter:"5h13","St. Paul's":"5h33"};
-const TR={Lawrenceville:"NYC drive",Choate:"Port Jeff ferry",Taft:"Port Jeff ferry","St. George's":"Orient Pt ferry",Westminster:"Port Jeff ferry",Loomis:"Port Jeff ferry",Hill:"NYC drive",Hotchkiss:"NYC drive",Salisbury:"NYC drive",Deerfield:"Orient Pt ferry",Andover:"Orient Pt ferry",Exeter:"Orient Pt ferry","St. Paul's":"Orient Pt ferry"};
-const EN={Exeter:{ps:"$1,493K",s:10},Andover:{ps:"$1,222K",s:10},"St. Paul's":{ps:"$1,406K",s:10},Deerfield:{ps:"$1,290K",s:10},Hotchkiss:{ps:"$902K",s:8},Choate:{ps:"$461K",s:5},Lawrenceville:{ps:"$884K",s:8},Taft:{ps:"$690K",s:7},Loomis:{ps:"$472K",s:5},Westminster:{ps:"$250K",s:3},"St. George's":{ps:"$622K",s:6},Hill:{ps:"$309K",s:3},Salisbury:{ps:"$351K",s:4}};
+const TR={Lawrenceville:"NYC",Choate:"Port Jeff",Taft:"Port Jeff","St. George's":"Orient Pt",Westminster:"Port Jeff",Loomis:"Port Jeff",Hill:"NYC",Hotchkiss:"NYC",Salisbury:"NYC",Deerfield:"Orient Pt",Andover:"Orient Pt",Exeter:"Orient Pt","St. Paul's":"Orient Pt"};
+const ENDOW={Exeter:10,Andover:10,"St. Paul's":10,Deerfield:10,Hotchkiss:8,Choate:5,Lawrenceville:8,Taft:7,Loomis:5,Westminster:3,"St. George's":6,Hill:3,Salisbury:4};
 const PS={Exeter:10,Andover:10,"St. Paul's":9,Deerfield:9,Hotchkiss:8,Choate:9,Lawrenceville:8,Taft:8,Loomis:7,Westminster:6,"St. George's":7,Hill:7,Salisbury:6};
 const FA={Exeter:8,Andover:9,"St. Paul's":7,Deerfield:10,Hotchkiss:9,Choate:7,Lawrenceville:10,Taft:7,Loomis:6,Westminster:6,"St. George's":6,Hill:5,Salisbury:4};
 const SF={Exeter:8,Andover:9,"St. Paul's":6,Deerfield:10,Hotchkiss:9,Choate:7,Lawrenceville:10,Taft:7,Loomis:6,Westminster:5,"St. George's":7,Hill:5,Salisbury:4};
-const DIV_PCT={Exeter:57,Andover:61,"St. Paul's":48,Deerfield:42,Hotchkiss:39,Choate:48,Lawrenceville:55,Taft:45,Loomis:46,Westminster:25,"St. George's":40,Hill:43,Salisbury:22};
 
-// ── SCHOOL DATA ──────────────────────────────────────────────────────────────
-const S={
-  Exeter:       {prestige:PS.Exeter,      college:9,eagle:EB.Exeter,      lax:6, polo:9, trad:2,chr:2, board:7, div:cS(57),fac:FA.Exeter,      sfac:SF.Exeter,      travel:TS.Exeter,      endow:EN.Exeter.s,      enroll:eS(1106),loc:"NH",n:1106},
-  Andover:      {prestige:PS.Andover,     college:9,eagle:EB.Andover,     lax:6, polo:8, trad:2,chr:2, board:6, div:cS(61),fac:FA.Andover,     sfac:SF.Andover,     travel:TS.Andover,     endow:EN.Andover.s,     enroll:eS(1154),loc:"MA",n:1154},
-  "St. Paul's": {prestige:PS["St. Paul's"],college:9,eagle:EB["St. Paul's"],lax:7,polo:2,trad:4,chr:10,board:10,div:cS(48),fac:FA["St. Paul's"],sfac:SF["St. Paul's"],travel:TS["St. Paul's"],endow:EN["St. Paul's"].s,enroll:eS(540),loc:"NH",n:540},
-  Deerfield:    {prestige:PS.Deerfield,   college:8,eagle:EB.Deerfield,   lax:10,polo:7, trad:4,chr:3, board:9, div:cS(42),fac:FA.Deerfield,   sfac:SF.Deerfield,   travel:TS.Deerfield,   endow:EN.Deerfield.s,   enroll:eS(651), loc:"MA",n:651},
-  Hotchkiss:    {prestige:PS.Hotchkiss,   college:8,eagle:EB.Hotchkiss,   lax:3, polo:2, trad:4,chr:3, board:10,div:cS(39),fac:FA.Hotchkiss,   sfac:SF.Hotchkiss,   travel:TS.Hotchkiss,   endow:EN.Hotchkiss.s,   enroll:eS(614), loc:"CT",n:614},
-  Choate:       {prestige:PS.Choate,      college:8,eagle:EB.Choate,      lax:7, polo:7, trad:3,chr:3, board:6, div:cS(48),fac:FA.Choate,      sfac:SF.Choate,      travel:TS.Choate,      endow:EN.Choate.s,      enroll:eS(860), loc:"CT",n:860},
-  Lawrenceville:{prestige:PS.Lawrenceville,college:8,eagle:EB.Lawrenceville,lax:10,polo:7,trad:3,chr:5,board:5,div:cS(55),fac:FA.Lawrenceville,sfac:SF.Lawrenceville,travel:TS.Lawrenceville,endow:EN.Lawrenceville.s,enroll:eS(820),loc:"NJ",n:820},
-  Taft:         {prestige:PS.Taft,        college:7,eagle:EB.Taft,        lax:8, polo:2, trad:5,chr:2, board:8, div:cS(45),fac:FA.Taft,        sfac:SF.Taft,        travel:TS.Taft,        endow:EN.Taft.s,        enroll:eS(580), loc:"CT",n:580},
-  Loomis:       {prestige:PS.Loomis,      college:6,eagle:EB.Loomis,      lax:9, polo:7, trad:3,chr:2, board:5, div:cS(46),fac:FA.Loomis,      sfac:SF.Loomis,      travel:TS.Loomis,      endow:EN.Loomis.s,      enroll:eS(742), loc:"CT",n:742},
-  Westminster:  {prestige:PS.Westminster, college:6,eagle:EB.Westminster, lax:4, polo:2, trad:5,chr:3, board:6, div:cS(25),fac:FA.Westminster, sfac:SF.Westminster, travel:TS.Westminster,  endow:EN.Westminster.s, enroll:eS(400), loc:"CT",n:400},
-  "St. George's":{prestige:PS["St. George's"],college:6,eagle:EB["St. George's"],lax:3,polo:2,trad:6,chr:9,board:8,div:cS(40),fac:FA["St. George's"],sfac:SF["St. George's"],travel:TS["St. George's"],endow:EN["St. George's"].s,enroll:eS(370),loc:"RI",n:370},
-  Hill:         {prestige:PS.Hill,        college:6,eagle:EB.Hill,        lax:8, polo:8, trad:6,chr:7, board:7, div:cS(43),fac:FA.Hill,        sfac:SF.Hill,        travel:TS.Hill,        endow:EN.Hill.s,        enroll:eS(527), loc:"PA",n:527},
-  Salisbury:    {prestige:PS.Salisbury,   college:5,eagle:EB.Salisbury,   lax:8, polo:2, trad:9,chr:9, board:9, div:cS(22),fac:FA.Salisbury,   sfac:SF.Salisbury,   travel:TS.Salisbury,   endow:EN.Salisbury.s,   enroll:eS(308), loc:"CT",n:308},
+// Boys swimming scores — NEPSAC D.I/D.II results 2025-2026
+// Andover=10: won D.I boys 2025(432pts) AND 2026(440.5pts), 9 straight titles
+// Exeter=8: 2nd D.I boys 2025(311pts), consistent top-3
+// Choate=8: tied 3rd D.I boys 2025(286pts), 3rd D.I boys 2026(329pts)
+// Loomis=7: D.I competitor, multiple All-NEPSAC, mid-tier D.I boys
+// Deerfield=7: 6th D.I boys 2025, strong All-NEPSAC individual honorees
+// St. George's=7: 3rd D.II 2025, excellent for school size, 8-lane pool
+// Westminster=6: D.II competitor, won D.II boys title 2019, 2nd 2020, Hibbard Pool strong
+// Lawrenceville=5: new Tsai 8-lane pool 2024, mid-Atlantic circuit, limited NEPSAC data
+// Hotchkiss=5: 8th D.I boys 2025, strong 10-lane pool infra but mid-table results
+// Taft=4: Founders League, no D.I championship appearances, adequate
+// St. Paul's=4: NEPSAC member, no championship results surfaced, limited depth
+// Hill=3: mid-Atlantic, not NEPSAC swim, limited competitive profile
+// Salisbury=3: small school, no NEPSAC championship presence
+
+const SWIM={
+  Exeter:      {s:8, tip:"2nd NEPSAC D.I boys 2025 (311pts) · consistent top-3 · Roger Nekton Pool 2018 (8-lane) · multiple All-NEPSAC honorees"},
+  Andover:     {s:10,tip:"Won NEPSAC D.I boys 2025 (432pts) AND 2026 (440.5pts) · 9 consecutive titles · dominant programme nationally"},
+  "St. Paul's":{s:4, tip:"NEPSAC member, no D.I championship results surfaced · limited programme depth · competes but not a contender"},
+  Deerfield:   {s:7, tip:"6th NEPSAC D.I boys 2025 · multiple All-NEPSAC individual honorees · 8-lane Natatorium · strong but not top-3"},
+  Hotchkiss:   {s:5, tip:"8th NEPSAC D.I boys 2025 · 10-lane Hixon Pool (hosted 2025 championships) · strong facilities, mid-table results"},
+  Choate:      {s:8, tip:"Tied 3rd NEPSAC D.I boys 2025 (286pts) · 3rd D.I boys 2026 (329pts) · consistent top-3 D.I contender"},
+  Lawrenceville:{s:5,tip:"New Tsai 8-lane pool (2024) · mid-Atlantic circuit, limited NEPSAC data · emerging programme · not yet proven at championship level"},
+  Taft:        {s:4, tip:"Founders League competitor · no D.I championship appearances · adequate programme, limited national profile"},
+  Loomis:      {s:7, tip:"NEPSAC D.I competitor · multiple All-NEPSAC individual honorees · mid-tier D.I boys · competitive 8-lane pool"},
+  Westminster: {s:6, tip:"NEPSAC D.II · won D.II boys title 2019, 2nd in 2020 · Hibbard Pool 2003 (8-lane, Daktronics timing) · solid D.II programme"},
+  "St. George's":{s:7,tip:"3rd NEPSAC D.II boys 2025 (284pts) · excellent for school size · 8-lane pool · strong programme relative to enrollment"},
+  Hill:        {s:3, tip:"Mid-Atlantic programme, not NEPSAC swim circuit · limited competitive profile · no championship data found"},
+  Salisbury:   {s:3, tip:"Small school · no NEPSAC championship presence found · limited swimming profile"},
 };
 
-const W={prestige:9,college:9,eagle:3,lax:9,polo:5,trad:9,chr:8,board:8,div:7,fac:7,sfac:7,travel:10,endow:5,enroll:5};
-const FLD=['prestige','college','eagle','lax','polo','trad','chr','board','div','fac','sfac','travel','endow','enroll'];
+const D={
+  Exeter:       {prestige:PS.Exeter,      college:9,eagle:EB.Exeter,      lax:6, polo:9,swim:SWIM.Exeter.s,      trad:2,chr:2, board:7, div:cS(57),fac:FA.Exeter,      sfac:SF.Exeter,      travel:TS.Exeter,      endow:ENDOW.Exeter,      enroll:eS(1106),loc:"NH",n:1106},
+  Andover:      {prestige:PS.Andover,     college:9,eagle:EB.Andover,     lax:6, polo:8,swim:SWIM.Andover.s,     trad:2,chr:2, board:6, div:cS(61),fac:FA.Andover,     sfac:SF.Andover,     travel:TS.Andover,     endow:ENDOW.Andover,     enroll:eS(1154),loc:"MA",n:1154},
+  "St. Paul's": {prestige:PS["St. Paul's"],college:9,eagle:EB["St. Paul's"],lax:7,polo:2,swim:SWIM["St. Paul's"].s,trad:4,chr:10,board:10,div:cS(48),fac:FA["St. Paul's"],sfac:SF["St. Paul's"],travel:TS["St. Paul's"],endow:ENDOW["St. Paul's"],enroll:eS(540),loc:"NH",n:540},
+  Deerfield:    {prestige:PS.Deerfield,   college:8,eagle:EB.Deerfield,   lax:10,polo:7,swim:SWIM.Deerfield.s,  trad:4,chr:3, board:9, div:cS(42),fac:FA.Deerfield,   sfac:SF.Deerfield,   travel:TS.Deerfield,   endow:ENDOW.Deerfield,   enroll:eS(651), loc:"MA",n:651},
+  Hotchkiss:    {prestige:PS.Hotchkiss,   college:8,eagle:EB.Hotchkiss,   lax:3, polo:2,swim:SWIM.Hotchkiss.s,  trad:4,chr:3, board:10,div:cS(39),fac:FA.Hotchkiss,   sfac:SF.Hotchkiss,   travel:TS.Hotchkiss,   endow:ENDOW.Hotchkiss,   enroll:eS(614), loc:"CT",n:614},
+  Choate:       {prestige:PS.Choate,      college:8,eagle:EB.Choate,      lax:7, polo:7,swim:SWIM.Choate.s,      trad:3,chr:3, board:6, div:cS(48),fac:FA.Choate,      sfac:SF.Choate,      travel:TS.Choate,      endow:ENDOW.Choate,      enroll:eS(860), loc:"CT",n:860},
+  Lawrenceville:{prestige:PS.Lawrenceville,college:8,eagle:EB.Lawrenceville,lax:10,polo:7,swim:SWIM.Lawrenceville.s,trad:3,chr:5,board:5,div:cS(55),fac:FA.Lawrenceville,sfac:SF.Lawrenceville,travel:TS.Lawrenceville,endow:ENDOW.Lawrenceville,enroll:eS(820),loc:"NJ",n:820},
+  Taft:         {prestige:PS.Taft,        college:7,eagle:EB.Taft,        lax:8, polo:2,swim:SWIM.Taft.s,        trad:5,chr:2, board:8, div:cS(45),fac:FA.Taft,        sfac:SF.Taft,        travel:TS.Taft,        endow:ENDOW.Taft,        enroll:eS(580), loc:"CT",n:580},
+  Loomis:       {prestige:PS.Loomis,      college:6,eagle:EB.Loomis,      lax:9, polo:7,swim:SWIM.Loomis.s,      trad:3,chr:2, board:5, div:cS(46),fac:FA.Loomis,      sfac:SF.Loomis,      travel:TS.Loomis,      endow:ENDOW.Loomis,      enroll:eS(742), loc:"CT",n:742},
+  Westminster:  {prestige:PS.Westminster, college:6,eagle:EB.Westminster, lax:4, polo:2,swim:SWIM.Westminster.s,  trad:5,chr:3, board:6, div:cS(25),fac:FA.Westminster, sfac:SF.Westminster, travel:TS.Westminster,  endow:ENDOW.Westminster, enroll:eS(400), loc:"CT",n:400},
+  "St. George's":{prestige:PS["St. George's"],college:6,eagle:EB["St. George's"],lax:3,polo:2,swim:SWIM["St. George's"].s,trad:6,chr:9,board:8,div:cS(40),fac:FA["St. George's"],sfac:SF["St. George's"],travel:TS["St. George's"],endow:ENDOW["St. George's"],enroll:eS(370),loc:"RI",n:370},
+  Hill:         {prestige:PS.Hill,        college:6,eagle:EB.Hill,        lax:8, polo:8,swim:SWIM.Hill.s,        trad:6,chr:7, board:7, div:cS(43),fac:FA.Hill,        sfac:SF.Hill,        travel:TS.Hill,        endow:ENDOW.Hill,        enroll:eS(527), loc:"PA",n:527},
+  Salisbury:    {prestige:PS.Salisbury,   college:5,eagle:EB.Salisbury,   lax:8, polo:2,swim:SWIM.Salisbury.s,   trad:9,chr:9, board:9, div:cS(22),fac:FA.Salisbury,   sfac:SF.Salisbury,   travel:TS.Salisbury,   endow:ENDOW.Salisbury,   enroll:eS(308), loc:"CT",n:308},
+};
 
-function tot(k){const d=S[k];let t=0,m=0;for(const f of FLD){t+=(d[f]||0)*W[f];m+=10*W[f];}return m?Math.round(t/m*100):0;}
-function tc(s){return s>=60?'t1':s>=50?'t2':'t3';}
-function tl(s){return s>=60?'Tier 1':s>=50?'Tier 2':'Tier 3';}
-function tcol(s){return s>=60?'var(--gn)':s>=50?'var(--bl)':'var(--am)';}
-function cc(v){return v>=9?'cg':v>=7?'cb':v>=5?'cw':'cr';}
+// v25: add swim=4, 15 criteria, 111 total pts
+const W={prestige:9,college:9,eagle:3,lax:9,polo:5,swim:4,trad:9,chr:8,board:8,div:7,fac:7,sfac:7,travel:10,endow:5,enroll:5};
+const FLD=['prestige','college','eagle','lax','polo','swim','trad','chr','board','div','fac','sfac','travel','endow','enroll'];
 
-const ranked=Object.keys(S).sort((a,b)=>tot(b)-tot(a));
-const scores=ranked.map(k=>tot(k));
+function tot(k){
+  const d=D[k];let t=0,m=0;
+  for(const f of FLD){t+=(d[f]||0)*W[f];m+=10*W[f];}
+  return m?Math.round(t/m*100):0;
+}
+function getTier(s){
+  if(s>=60)return{label:"Tier 1",cls:"t1",fill:"#1D9E75"};
+  if(s>=50)return{label:"Tier 2",cls:"t2",fill:"#378ADD"};
+  return{label:"Tier 3",cls:"t3",fill:"#BA7517"};
+}
 
-// ── STRENGTHS ────────────────────────────────────────────────────────────────
-const STR={
-  Exeter:"Prestige · college placement · water polo",
-  Andover:"Prestige · facilities · college placement",
+const ROUTE_COLOR={"NYC":"#633806","Port Jeff":"#0C447C","Orient Pt":"#085041"};
+const ROUTE_BG={"NYC":"#FAEEDA","Port Jeff":"#E6F1FB","Orient Pt":"#E1F5EE"};
+const STRENGTHS={
+  Exeter:"Prestige · water polo · boys swimming",
+  Andover:"Boys swimming (dominant) · prestige · facilities",
   "St. Paul's":"Christian · boarding · endowment/student",
   Deerfield:"Lacrosse · facilities · Eaglebrook feeder",
-  Hotchkiss:"Boarding · sports facilities · prestige",
-  Choate:"Eaglebrook feeder · travel · prestige",
+  Hotchkiss:"Boarding · facilities · prestige",
+  Choate:"Eaglebrook · travel · boys swimming",
   Lawrenceville:"Lacrosse · facilities · travel",
   Taft:"Travel · boarding · lacrosse",
   Loomis:"Lacrosse · travel · water polo",
   Westminster:"Diversity · travel · Eaglebrook feeder",
-  "St. George's":"Christian · boarding · traditional culture",
+  "St. George's":"Christian · boarding · traditional",
   Hill:"Water polo · lacrosse · diversity",
   Salisbury:"Traditional · christian · diversity"
 };
 
-// ── RANKINGS ─────────────────────────────────────────────────────────────────
-const rl=document.getElementById('rl');
-ranked.forEach((k,i)=>{
-  const s=tot(k),t=tc(s),prev=i>0?scores[i-1]:s,gap=s-prev;
-  const gs=i>0&&gap<0?` <span style="font-size:10px;color:var(--inf)">${gap}</span>`:'';
-  rl.innerHTML+=`<div class="rc ${t}">
-    <div class="rn">${i+1}</div>
-    <div><div class="rname">${k}${gs}</div><div class="rmeta">${S[k].loc} · ${S[k].n.toLocaleString()} students · ${STR[k]||''}</div></div>
-    <div class="rpill"><span class="rpill ${t}p">${tl(s)}</span></div>
-    <div class="rtrav"><div class="rtscore">${TT[k]}</div><div class="rtroute">${TR[k]}</div></div>
-    <div><div class="rscore-n" style="color:${tcol(s)}">${s}</div><div class="rscore-b"><div class="rscore-f" style="width:${s}%;background:${tcol(s)}"></div></div></div>
-  </div>`;
-});
+const ranked=Object.keys(D).sort((a,b)=>tot(b)-tot(a));
+const scores=ranked.map(k=>tot(k));
 
-// ── MATRIX ───────────────────────────────────────────────────────────────────
-const COLS=[
-  {f:'prestige',l:'Prestige &<br>Selectivity',w:9,d:true,tip:'Merged criterion · Eight Schools/TSAO standing · acceptance rate · SAT/ACT profiles'},
-  {f:'college',l:'College<br>Placement',w:9,tip:'Ivy and top-25 matriculation rate'},
-  {f:'eagle',l:'Eaglebrook<br>Feeder',w:3,tip:'Actual placement data past 10 and 5 years from Eaglebrook placement report'},
-  {f:'lax',l:'Lacrosse',w:9,d:true,tip:'USA Lacrosse national rankings Week 9 2026 + 3-year record'},
-  {f:'polo',l:'Water<br>Polo',w:5,tip:'NEPSAC results and programme quality'},
-  {f:'trad',l:'Traditional<br>Culture',w:9,d:true,tip:'Composite: woke quotient + dress code, chapel, forms, prefects, all-boys, grooming, formal meals, Saturday classes'},
-  {f:'chr',l:'Christian<br>Values',w:8,tip:'Episcopal affiliation · required chapel · ordained clergy · verified from each school website'},
-  {f:'board',l:'Low %<br>Day Students',w:8,tip:'More boarders = higher score. 0% day students = 10'},
-  {f:'div',l:'Lower %<br>Diversity',w:7,tip:'Students of colour incl. Asian · official 2023-25 profiles · total enrollment basis'},
-  {f:'fac',l:'Overall<br>Facilities',w:7,d:true,tip:'Academic buildings · residential quality · dining · arts · capex last 10yr · LEED · sq footage'},
-  {f:'sfac',l:'Sports<br>Facilities',w:7,tip:'Turf fields & lighting · pool · rinks · field house · squash · recent sports capex · stadium · track'},
-  {f:'travel',l:'Travel<br>Quogue',w:10,d:true,tip:'Verified drive/ferry times from Quogue NY. Port Jeff → Bridgeport or Orient Pt → New London'},
-  {f:'endow',l:'Endow/<br>Student',w:5,tip:'Total endowment ÷ enrollment. ≥$1M=10 · $800K=8 · $600K=7 · $500K=6 · $400K=5 · $300K=4'},
-  {f:'enroll',l:'Enrollment',w:5,tip:'550-800 sweet spot = 10. Bell curve - too large or too small both score lower'},
-];
+document.getElementById("ranking-body").innerHTML=ranked.map((k,i)=>{
+  const s=tot(k);const tier=getTier(s);
+  const prev=i>0?scores[i-1]:s;
+  const gap=s-prev;
+  const gapStr=i>0&&gap<0?`<span class="delta">${gap}</span>`:"";
+  const route=TR[k];
+  const sw=SWIM[k];
+  return`<tr>
+    <td style="font-weight:500;color:var(--color-text-secondary);font-size:13px">${i+1}</td>
+    <td>
+      <div style="font-weight:500;font-size:13px">${k}${gapStr}</div>
+      <div style="font-size:10px;color:var(--color-text-secondary)">${D[k].loc} · ${D[k].n.toLocaleString()} · ${STRENGTHS[k]}</div>
+    </td>
+    <td><span class="pill ${tier.cls}">${tier.label}</span></td>
+    <td>
+      <div style="font-size:12px;font-weight:500">${TT[k]}</div>
+      <span class="travel-badge" style="background:${ROUTE_BG[route]};color:${ROUTE_COLOR[route]}">${route}</span>
+    </td>
+    <td>
+      <div class="tooltip">
+        <div style="font-size:14px;font-weight:500">${sw.s}/10</div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">wt 4</div>
+        <div class="tip">${sw.tip}</div>
+      </div>
+    </td>
+    <td>
+      <div style="font-size:20px;font-weight:500;color:${tier.fill}">${s}</div>
+      <div class="score-bar"><div class="score-fill" style="width:${s}%;background:${tier.fill}"></div></div>
+    </td>
+  </tr>`;
+}).join("");
 
-const mh=document.getElementById('mh'),mb=document.getElementById('mb');
-const grps=[{l:'Academic',c:3,d:true},{l:'Sports',c:2,d:true},{l:'Culture & Values',c:4,d:true},{l:'Facilities',c:2,d:true},{l:'Logistics',c:3,d:true},{l:'Score',c:1,d:true}];
-let hr=`<tr><th class="sk" rowspan="2" style="text-align:left">School</th>`;
-grps.forEach(g=>{hr+=`<th colspan="${g.c}" style="font-size:9px;color:var(--inf);border-bottom:none;padding-bottom:0;${g.d?'border-left:1px solid var(--br)':''}">${g.l}</th>`;});
-hr+='</tr><tr>';
-COLS.forEach(c=>{hr+=`<th style="${c.d?'border-left:1px solid var(--br)':''}"><div class="tip">${c.l}<br><span style="font-size:9px;font-weight:300;color:var(--inf)">(${c.w})</span><div class="tb">${c.tip}</div></div></th>`;});
-hr+=`<th class="dl">Score</th></tr>`;
-mh.innerHTML=hr;
-
-ranked.forEach(k=>{
-  const d=S[k],s=tot(k);
-  let row=`<tr><td class="sk"><div class="sn">${k}</div><div class="sl">${d.loc} · ${d.n.toLocaleString()}</div></td>`;
-  COLS.forEach(c=>{
-    const v=d[c.f]||0;
-    let tipTxt=`${v}/10`;
-    if(c.f==='endow')tipTxt=`${EN[k]?.ps||''} · ${v}/10`;
-    else if(c.f==='travel')tipTxt=`${TT[k]} · ${TR[k]}`;
-    else if(c.f==='div')tipTxt=`${DIV_PCT[k]}% students of colour · score ${v}/10`;
-    row+=`<td style="${c.d?'border-left:1px solid var(--br)':''}"><div class="tip"><span class="cell ${cc(v)}">${v}</span><div class="tb">${tipTxt}</div></div></td>`;
-  });
-  row+=`<td class="dl"><span class="sc" style="color:${tcol(s)}">${s}</span></td></tr>`;
-  mb.innerHTML+=row;
-});
-
-// ── WEIGHTS ──────────────────────────────────────────────────────────────────
 const CATS=[
-  {n:'Academic & Prestige',c:'#1B4F8A',items:[
-    {l:'Prestige & selectivity',s:'Eight Schools/TSAO standing · acceptance rate · SAT/ACT profiles · merged from two prior criteria',w:9},
-    {l:'College placement',s:'Ivy and top-25 matriculation rates',w:9},
-    {l:'Eaglebrook feeder',s:'Actual placement data past 10 and 5 years from Eaglebrook placement report',w:3},
+  {name:"Academic & prestige",color:"#378ADD",items:[
+    {label:"Prestige & selectivity",sub:"Eight Schools/TSAO standing · acceptance rate · test scores · merged criterion",w:9},
+    {label:"College placement",sub:"Ivy and top-25 matriculation rates",w:9},
+    {label:"Eaglebrook feeder",sub:"Actual placement data past 10 and 5 years",w:3},
   ]},
-  {n:'Sports',c:'#1D6B4A',items:[
-    {l:'Lacrosse',s:'USA Lacrosse national rankings Week 9 2026 · cross-referenced with 3-year win-loss records',w:9},
-    {l:'Water polo',s:'NEPSAC results · programme quality · coaching credentials',w:5},
+  {name:"Sports",color:"#1D9E75",items:[
+    {label:"Lacrosse",sub:"USA Lacrosse national rankings Week 9 2026 · 3-year record",w:9},
+    {label:"Water polo",sub:"NEPSAC results · programme quality",w:5},
+    {label:"Boys swimming",sub:"NEPSAC D.I/D.II championship results 2025-2026 · All-NEPSAC honorees · pool quality",w:4,isNew:true},
   ]},
-  {n:'Culture & Values',c:'#5A3A8A',items:[
-    {l:'Traditional culture',s:'Composite woke quotient (inverted) + positive signals: all-boys, dress code, chapel, forms, prefects, grooming, formal meals, Saturday classes, Latin motto',w:9},
-    {l:'Christian values',s:'Episcopal affiliation · required chapel frequency · ordained clergy presence · verified from each school website',w:8},
-    {l:'Low % day students',s:'More boarders = higher score. Fully residential = 10. Measures authentic boarding community.',w:8},
-    {l:'Lower % students of colour',s:'Includes Asian · from official 2023-25 profiles · all adjusted to total enrollment basis',w:7},
+  {name:"Culture & values",color:"#7F77DD",items:[
+    {label:"Traditional culture",sub:"Composite: woke quotient + dress code, chapel, forms, prefects, all-boys, grooming, formal meals",w:9},
+    {label:"Christian values",sub:"Episcopal affiliation · required chapel · ordained clergy",w:8},
+    {label:"Low % day students",sub:"More boarders = higher score",w:8},
+    {label:"Lower % students of colour",sub:"Includes Asian · official 2023-25 profiles",w:7},
   ]},
-  {n:'Facilities',c:'#6B3A1D',items:[
-    {l:'Overall facilities',s:'Academic buildings recency & quality · residential comfort & modernity · dining · arts · capital expenditure last 10 years · LEED certifications · sq footage per student',w:7},
-    {l:'Sports facilities',s:'Turf fields count & lighting · pool quality · ice rinks · field house sq footage · squash courts · recent sports capital projects · stadium quality · track recency',w:7},
+  {name:"Facilities",color:"#6B3A1D",items:[
+    {label:"Overall facilities",sub:"Academic buildings · residential · dining · arts · capex last 10yr · LEED · sq footage",w:7},
+    {label:"Sports facilities",sub:"Turf fields · pool · rinks · field house · squash · recent sports capex · stadium",w:7},
   ]},
-  {n:'Resources & Logistics',c:'#8A5A1A',items:[
-    {l:'Travel from Quogue NY',s:'Verified door-to-school times. Port Jefferson → Bridgeport (2h24) or Orient Point → New London (2h23) ferry routes. Score 10=&lt;2h30 down to 1=5h30+',w:10},
-    {l:'Endowment per student',s:'Total endowment ÷ enrollment. ≥$1M=10 · $800K=8 · $600K=7 · $500K=6 · $400K=5 · $300K=4 · &lt;$300K=3',w:5},
-    {l:'Enrollment',s:'Sweet spot 550–800 students = 10. Bell curve both above and below. Too small = limited programme depth. Too large = diluted community.',w:5},
+  {name:"Resources & logistics",color:"#BA7517",items:[
+    {label:"Travel from Quogue NY",sub:"Verified drive/ferry times · Port Jeff → Bridgeport or Orient Pt → New London",w:10},
+    {label:"Endowment per student",sub:"Financial ballast · ≥$1M=10 · $800K=8 · $600K=7 · $500K=6 · $400K=5 · $300K=4",w:5},
+    {label:"Enrollment",sub:"550–800 sweet spot = 10 · bell curve both above and below",w:5},
   ]},
 ];
 
 const totalPts=Object.values(W).reduce((a,b)=>a+b,0);
-const wg=document.getElementById('wg');
-CATS.forEach(cat=>{
+
+document.getElementById("weight-grid").innerHTML=CATS.map(cat=>{
   const catPts=cat.items.reduce((s,x)=>s+x.w,0);
-  wg.innerHTML+=`<div class="wcard">
-    <div class="wcat" style="color:${cat.c}">${cat.n} — ${catPts} pts (${Math.round(catPts/totalPts*100)}%)</div>
-    ${cat.items.map(it=>`<div class="wr">
-      <div class="wl"><div class="wn">${it.l}</div><div class="ws">${it.s}</div></div>
-      <div class="wri"><div class="wnum" style="color:${cat.c}">${it.w}</div>
-      <div class="wbar"><div class="wfill" style="width:${Math.round(it.w/10*100)}%;background:${cat.c}"></div></div></div>
-    </div>`).join('')}
-    <div class="wtot"><span>Category total</span><span style="font-weight:500">${catPts} / ${totalPts} pts</span></div>
+  const rows=cat.items.map(item=>`
+    <div class="wrow">
+      <div class="wlabel">
+        <div class="wname">${item.label}${item.isNew?`<span class="new-tag">new v25</span>`:""}</div>
+        <div class="wsub">${item.sub}</div>
+      </div>
+      <div class="wright">
+        <div class="wnum">${item.w}</div>
+        <div class="wbar"><div class="wfill" style="width:${Math.round(item.w/10*100)}%;background:${cat.color}"></div></div>
+      </div>
+    </div>`).join("");
+  return`<div class="wcard">
+    <div class="wcat" style="color:${cat.color}">${cat.name} · ${catPts} pts (${Math.round(catPts/totalPts*100)}%)</div>
+    ${rows}
+    <div class="wtotal"><span>Category total</span><span style="font-weight:500">${catPts} / ${totalPts} pts</span></div>
   </div>`;
-});
+}).join("");
 
-// ── METHODOLOGY ──────────────────────────────────────────────────────────────
-const METHOD=[
-  {t:'1. Prestige & selectivity',b:'<b>Weight: 9 · Merged criterion.</b> Previously scored as two separate criteria (prestige and selectivity); merged because they measure nearly the same underlying quality. Score is the average of the two prior scores.<br><br>Inputs: Eight Schools or TSAO membership, brand recognition, acceptance rate, median SAT/ACT. Exeter and Andover score 10 (sub-15% acceptance, global brand). Salisbury scores 6 (less selective, smaller regional profile).'},
-  {t:'2. College placement',b:'<b>Weight: 9.</b> Ivy League plus top-25 university matriculation rates, verified from each school\'s most recent published college placement report (typically 3-year rolling data).<br><br>Exeter, Andover, St. Paul\'s score 9. Salisbury scores 5 reflecting its smaller network. Loomis, Westminster, St. George\'s score 6.'},
-  {t:'3. Eaglebrook feeder',b:'<b>Weight: 3.</b> Number of Eaglebrook School graduates who enrolled at each school over the past 10 years (and 5 years) from the actual Eaglebrook placement data report.<br><br>Deerfield = 10 (83 over 10yr, 38 over 5yr). Choate = 9 (47/30). St. Paul\'s = 8. Salisbury = 2 (10/3). Weight intentionally low — measures historical pipeline, not school quality, and Eaglebrook connects with all major schools.'},
-  {t:'4. Lacrosse',b:'<b>Weight: 9.</b> USA Lacrosse national rankings Week 9 2026, cross-referenced with 3-year win-loss records from LaxNumbers and MaxPreps (2023–2025).<br><br>Deerfield and Lawrenceville score 10 (nationally ranked top-5). Loomis scores 9. Hotchkiss and St. George\'s score 3 (weak programmes). Westminster scores 4 (below average in Founders League most years, 3-year avg W% ~.35).'},
-  {t:'5. Water polo',b:'<b>Weight: 5.</b> NEPSAC divisional results, programme history, coaching credentials, and whether the school offers a competitive varsity programme at all.<br><br>Exeter scores 9 (elite NEPSAC programme, multiple Olympians). Andover 8. Deerfield, Loomis, Choate, Lawrenceville, Hill score 7. Most other schools score 2 (no meaningful programme).'},
-  {t:'6. Traditional culture',b:'<b>Weight: 9.</b> Composite of two sub-scores:<br><br><i>Woke quotient (inverted):</i> Verified from each school\'s own website — presence of JEDI/DEI programmes, pronoun mandates, required anti-racist reading, anonymous bias reporting, microaggression systems. Score 1 = highest woke signal (Exeter, Andover). Score 7 = lowest (Salisbury).<br><br><i>Positive traditional signals:</i> All-boys school, daily jacket/tie + grooming code, Saturday classes, prefect system, formal seated meals, Forms terminology, Honor Code, Latin motto, required chapel, study hall, house system.<br><br>Salisbury scores 9 (all signals present). Exeter and Andover score 2.'},
-  {t:'7. Christian values',b:'<b>Weight: 8.</b> Verified from each school\'s own website and chapel programme pages. Inputs: formal religious affiliation (Episcopal = highest), required chapel frequency, ordained clergy on staff, explicit Christian language in school prayer or motto, cross imagery in branding.<br><br>St. Paul\'s = 10 (required chapel 4x/week, ordained Episcopal priests, Jesus Christ in school prayer). Salisbury = 9 (required Tue/Fri chapel, Episcopal, four crosses on crest). St. George\'s = 9 (required Tue/Thu chapel, Thursday = full Episcopal liturgy). Taft = 2 (nondenominational, no required chapel). Exeter and Andover = 2.'},
-  {t:'8. Low % day students',b:'<b>Weight: 8.</b> Percentage of day (non-boarding) students, inverted so more boarding = higher score. Measures authenticity of boarding community — a school with 30% day students has fundamentally different culture and weekend experience than one with 0%.<br><br>St. Paul\'s = 10 (0% day). Hotchkiss = 10 (~2% day). Deerfield = 9 (going fully residential after class of 2030). Lawrenceville = 5 (~31% day). Loomis = 5 (~30% day).'},
-  {t:'9. Lower % students of colour',b:'<b>Weight: 7.</b> Total students of colour as percentage of total enrollment, including Asian students. Lower % = higher score. All figures from official school profiles 2023–25. Some schools\' published figures were domestic-only and were adjusted upward to estimated total-enrollment basis (Loomis, Choate, St. George\'s).<br><br>Westminster = 9 (25%). Salisbury = 8 (22%). Andover = 2 (61%). Exeter = 3 (57%).'},
-  {t:'10. Overall facilities',b:'<b>Weight: 7. New in v24.</b> Research-based composite covering: academic building recency and quality, residential hall modernity and comfort, dining facility quality and recency, arts facilities, and capital expenditure in the last 10 years.<br><br>Deerfield = 10 ($65M LEED Gold science complex, 132,000sqft LEED Gold athletics 2019, dining renovation underway). Lawrenceville = 10 (Tsai Commons 2022-24, Sasaki LEED Silver — the most impressive recent prep school capital project in the country). Hotchkiss = 9 (212,000sqft Mars Athletic Center, $35-40M dining hall Dec 2025, multiple dorm renovations). Salisbury = 4 (functional but modest).'},
-  {t:'11. Sports facilities',b:'<b>Weight: 7. New in v24.</b> Specific to athletic infrastructure: number of synthetic turf fields and whether they have lighting, pool quality and recency, ice rink(s), field house square footage, squash courts, recent sports-specific capital projects, stadium quality (seating, video board, lighting), and track recency.<br><br>Deerfield = 10 (132,000sqft LEED Gold athletics complex 2019: 4 lit turf fields, 8-lane pool, new rink, crew tank, tennis centre). Lawrenceville = 10 (Tsai: 8-lane pool, ice rink, indoor track, field house, squash, geothermal turf). Hotchkiss = 9 (212,000sqft Mars AC, 10-lane pool). Salisbury = 4.'},
-  {t:'12. Travel from Quogue NY',b:'<b>Weight: 10 (highest weighted criterion).</b> Verified door-to-school travel time from Quogue, NY using optimal route — either direct drive or drive + ferry.<br><br>Two ferry routes: Port Jefferson → Bridgeport (2h24 crossing) cuts into western CT. Orient Point → New London (2h23 crossing) cuts into eastern CT, RI, MA, NH.<br><br>Scoring: 10=&lt;2h30 · 9=&lt;2h45 · 8=&lt;3h10 · 7=&lt;3h30 · 6=&lt;3h45 · 4=&lt;4h30 · 3=&lt;5h · 2=&lt;5h30 · 1=5h30+<br><br>Lawrenceville = 9 (2h18, direct NYC drive). St. Paul\'s = 1 (5h33, Orient Pt ferry). Travel is the single highest-weighted criterion because weekend visit frequency directly affects boarding school experience quality.'},
-  {t:'13. Endowment per student',b:'<b>Weight: 5.</b> Total endowment divided by total enrollment. Chosen over raw endowment because it measures financial ballast per student — how much backing stands behind each student\'s experience, ability to fund scholarships, weather enrolment shocks, and maintain facilities.<br><br>Sources: Wikipedia 2024 annual reports and school financial statements.<br><br>Scoring: ≥$1M=10 · $800K-999K=8 · $600K-799K=7 · $500K-599K=6 · $400K-499K=5 · $300K-399K=4 · &lt;$300K=3<br><br>Exeter = 10 ($1.49M/student). St. Paul\'s = 10 ($1.41M — small enrollment makes $759M endowment go far). Westminster = 3 ($250K — weakest on list).'},
-  {t:'14. Enrollment',b:'<b>Weight: 5.</b> Bell curve centred on 550–800 students. Scoring: 550–800=10 · 500–849=9 · 450–899=7 · 400–949=5 · 350–1049=4 · outside=3.<br><br>Rationale: Below 450 students, programme and course breadth begins to suffer and varsity sports rosters thin. Above 900 students, community feel is compromised and the school begins to feel institutional rather than intimate.<br><br>Deerfield (651), Taft (580), Hotchkiss (614) all score 10. Exeter (1,106) and Andover (1,154) score 3. Salisbury (308) scores 3.'},
-];
+const catBreakdown=CATS.map(c=>{
+  const pts=c.items.reduce((s,x)=>s+x.w,0);
+  return`<span style="color:${c.color};font-weight:500">${c.name.split(" ")[0]} ${Math.round(pts/totalPts*100)}%</span>`;
+}).join(" · ");
 
-const mg=document.getElementById('mg');
-METHOD.forEach(m=>{
-  mg.innerHTML+=`<div class="mcard"><div class="mtitle">${m.t}</div><div class="mbody">${m.b}</div></div>`;
-});
-
-// ── NAV ──────────────────────────────────────────────────────────────────────
-function show(id,btn){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  btn.classList.add('on');
-}
+document.getElementById("wsummary").innerHTML=`
+  <strong style="color:var(--color-text-secondary)">Score formula:</strong> Σ(criterion × weight) ÷ Σ(10 × weight) × 100 · ${totalPts} total weight points · 15 criteria<br>
+  <strong style="color:var(--color-text-secondary)">Category influence:</strong> ${catBreakdown}<br>
+  <strong style="color:var(--color-text-secondary)">Boys swimming sources:</strong> NEPSAC D.I championships 2025 (Hotchkiss) and 2026 (Andover) · NEPSAC D.II 2025 · SwimCloud · All-NEPSAC recognition lists · school athletics pages<br>
+  <strong style="color:var(--color-text-secondary)">Key mover:</strong> Andover rises sharply on dominant 9-year NEPSAC boys title run · Choate and Exeter also benefit · Hill and Salisbury drop slightly
+`;
 </script>
-</body>
-</html>
