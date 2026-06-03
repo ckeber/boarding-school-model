@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boarding School Model · v25</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cr:#F7F4EE;--cd:#EDE9DF;--ink:#1A1917;--inl:#4A4845;--inf:#8A8784;--gn:#1D6B4A;--gl:#E4F0EA;--bl:#1B4F8A;--bll:#E4EDF7;--am:#8A5A1A;--aml:#F5ECD8;--rd:#8A2020;--rdl:#F5E0E0;--br:#D8D3C8;--brl:#EDE9DF;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cr);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;font-size:14px;min-height:100vh}
+.hdr{background:var(--ink);color:var(--cr);padding:40px 56px 36px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:1px solid rgba(247,244,238,.07);border-radius:50%}
+.hdr::after{content:'';position:absolute;bottom:-70px;right:90px;width:180px;height:180px;border:1px solid rgba(247,244,238,.04);border-radius:50%}
+.hdr-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(247,244,238,.45);margin-bottom:14px}
+.hdr h1{font-family:'Playfair Display',serif;font-size:34px;font-weight:500;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px}
+.hdr-sub{font-size:13px;color:rgba(247,244,238,.55);font-weight:300;max-width:520px;line-height:1.6}
+.hdr-meta{display:flex;gap:28px;margin-top:24px;flex-wrap:wrap}
+.hm-val{font-family:'Playfair Display',serif;font-size:20px}
+.hm-lbl{font-size:10px;color:rgba(247,244,238,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
+nav{background:var(--cd);border-bottom:1px solid var(--br);padding:0 56px;display:flex;gap:0;position:sticky;top:0;z-index:100;overflow-x:auto}
+.nb{padding:13px 18px;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--inf);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.nb.on{color:var(--ink);border-bottom-color:var(--ink)}
+.nb:hover{color:var(--ink)}
+.sec{display:none;padding:40px 56px}
+.sec.on{display:block}
+.stitle{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;margin-bottom:4px}
+.ssub{font-size:12px;color:var(--inf);margin-bottom:28px;font-weight:300}
+.rl{display:flex;flex-direction:column;gap:5px}
+.rc{background:#fff;border:1px solid var(--br);border-radius:5px;padding:14px 18px;display:grid;grid-template-columns:34px 1fr 90px 90px 160px;align-items:center;gap:14px;transition:box-shadow .15s}
+.rc:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.rc.t1{border-left:3px solid var(--gn)}.rc.t2{border-left:3px solid var(--bl)}.rc.t3{border-left:3px solid var(--am)}
+.rn{font-family:'Playfair Display',serif;font-size:20px;color:var(--inf);text-align:center}
+.rname{font-weight:500;font-size:14px}.rmeta{font-size:10px;color:var(--inf);margin-top:2px}
+.rpill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px;display:inline-block}
+.t1p{background:var(--gl);color:var(--gn)}.t2p{background:var(--bll);color:var(--bl)}.t3p{background:var(--aml);color:var(--am)}
+.rtrav{font-size:11px;text-align:center}.rtscore{font-weight:500}.rtroute{font-size:10px;color:var(--inf)}
+.rscore-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:400}
+.rscore-b{height:3px;background:var(--brl);border-radius:2px;margin-top:3px}.rscore-f{height:100%;border-radius:2px}
+.mscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:separate;border-spacing:0;font-size:11px;min-width:980px;width:100%}
+th{font-weight:500;color:var(--inf);text-align:center;padding:7px 5px;background:var(--cd);border-bottom:1px solid var(--br);vertical-align:bottom;line-height:1.25;font-size:10px;white-space:nowrap}
+td{text-align:center;padding:6px 4px;border-bottom:1px solid var(--brl);background:#fff}
+tr:hover td{background:var(--cr)}
+tr:hover td.sk{background:var(--cr)}
+.sk{position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--br);text-align:left;padding-left:10px;min-width:120px}
+th.sk{background:var(--cd);z-index:3}
+.cell{display:inline-flex;align-items:center;justify-content:center;width:22px;height:18px;border-radius:3px;font-weight:500;font-size:11px;font-family:'DM Mono',monospace}
+.cg{background:#DFF0D4;color:#1A5C0A}.cb{background:var(--bll);color:var(--bl)}.cw{background:var(--cd);color:var(--inl)}.cr{background:var(--rdl);color:var(--rd)}
+.dl{border-left:1px solid var(--br)}.sn{font-weight:500;font-size:12px}.sl{font-size:10px;color:var(--inf)}
+.sc{font-family:'Playfair Display',serif;font-size:17px;font-weight:500}
+.tip{position:relative;cursor:help}.tip:hover .tb{display:block}
+.tb{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cr);padding:8px 10px;border-radius:4px;font-size:10px;width:210px;z-index:99;line-height:1.5;text-align:left;font-weight:300;white-space:normal;pointer-events:none}
+.cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cv-card{background:#fff;border:1px solid var(--br);border-radius:5px;padding:14px 16px}
+.cv-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.cv-name{font-weight:500;font-size:13px}.cv-loc{font-size:10px;color:var(--inf);margin-top:1px}
+.cv-badge{font-size:15px;font-weight:500;padding:2px 9px;border-radius:4px;flex-shrink:0}
+.cv-rows{display:flex;flex-direction:column;gap:4px}
+.cv-row{display:grid;grid-template-columns:8px 1fr 14px;align-items:flex-start;gap:6px}
+.cv-dot{width:7px;height:7px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.cv-label{font-size:10px;color:var(--inl);line-height:1.4}
+.cv-num{font-size:9px;color:var(--inf);margin-right:3px}.cv-chk{font-size:11px;font-weight:500;text-align:right;margin-top:1px}
+.cv-div{height:0.5px;background:var(--brl);margin:7px 0}.cv-note{font-size:10px;color:var(--inf);line-height:1.5;font-style:italic}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.wcard{background:#fff;border:1px solid var(--br);border-radius:5px;padding:20px 22px}
+.wcat{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+.wr{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}.wl{flex:1}
+.wn{font-size:12px;font-weight:400}.ws{font-size:11px;color:var(--inf);margin-top:2px;line-height:1.4}
+.wri{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.wnum{font-family:'DM Mono',monospace;font-size:14px;font-weight:500}
+.wbar{width:72px;height:3px;background:var(--brl);border-radius:2px}.wfill{height:100%;border-radius:2px}
+.wtot{display:flex;justify-content:space-between;padding-top:10px;margin-top:2px;border-top:1px solid var(--brl);font-size:11px;color:var(--inf)}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.mcard{background:#fff;border:1px solid var(--br);border-radius:5px;padding:20px 22px}
+.mtitle{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:8px}
+.mbody{font-size:12px;color:var(--inl);line-height:1.7;font-weight:300}
+.fbox{background:var(--ink);color:var(--cr);padding:16px 20px;border-radius:5px;margin-bottom:20px;font-family:'DM Mono',monospace;font-size:12px;line-height:1.6}
+.sbox{background:#fff;border:1px solid var(--br);border-radius:5px;padding:14px 18px;margin-bottom:20px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.sr{display:flex;align-items:center;gap:6px;font-size:11px}.sw{width:26px;height:12px;border-radius:2px}
+.tb2{border-radius:5px;padding:13px 16px;margin-bottom:8px;border-left:3px solid}
+.ftr{background:var(--ink);color:rgba(247,244,238,.35);padding:18px 56px;font-size:10px;display:flex;justify-content:space-between;align-items:center;margin-top:40px;flex-wrap:wrap;gap:6px}
+@media(max-width:800px){.hdr,.sec,nav{padding-left:20px;padding-right:20px}.wgrid,.mgrid,.cv-grid{grid-template-columns:1fr}.rc{grid-template-columns:28px 1fr 60px}.rpill,.rtrav{display:none}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-eye">Private Research · Fall 2027 Entry · Quogue NY · v25 · Westminster removed · Updated June 2026</div>
+  <h1>Boarding School<br>Ranking Model</h1>
+  <div class="hdr-sub">Weighted scoring model across 15 criteria evaluating 12 US boarding schools. Christian Values includes 8 verified sub-criteria. Head of School / Board intelligence incorporated. DEI subordination of spiritual life screened across all schools.</div>
+  <div class="hdr-meta">
+    <div><div class="hm-val">12</div><div class="hm-lbl">Schools</div></div>
+    <div><div class="hm-val">15</div><div class="hm-lbl">Criteria</div></div>
+    <div><div class="hm-val">111</div><div class="hm-lbl">Weight pts</div></div>
+    <div><div class="hm-val">v25</div><div class="hm-lbl">Version</div></div>
+  </div>
+</div>
+<nav>
+  <button class="nb on" onclick="show('rankings',this)">Rankings</button>
+  <button class="nb" onclick="show('matrix',this)">Full Matrix</button>
+  <button class="nb" onclick="show('christian',this)">Christian Values</button>
+  <button class="nb" onclick="show('weights',this)">Weights</button>
+  <button class="nb" onclick="show('method',this)">Methodology</button>
+</nav>
+<div class="sec on" id="rankings">
+  <div class="stitle">School Rankings</div>
+  <div class="ssub">12 schools · weighted score out of 100 · 15 criteria · 111 weight points · v25 June 2026 update</div>
+  <div class="rl" id="rl"></div>
+  <div style="margin-top:22px" id="tiers"></div>
+</div>
+<div class="sec" id="matrix">
+  <div class="stitle">Full Scoring Matrix</div>
+  <div class="ssub">12 schools × 15 criteria · scroll right · hover cells for detail</div>
+  <div class="mscroll"><table><thead id="mh"></thead><tbody id="mb"></tbody></table></div>
+</div>
+<div class="sec" id="christian">
+  <div class="stitle">Christian Values — Detailed Breakdown</div>
+  <div class="ssub">8 sub-criteria per school · verified from each school's own website and head of school statements · weight 8 in overall model</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;font-size:11px">
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>1.</strong> Active religious affiliation</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>2.</strong> Faith content of chapel</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>3.</strong> Ordained clergy on staff</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>4.</strong> Active Christian language</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>5.</strong> Faith in daily culture</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>6.</strong> FOCUS on campus</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>7.</strong> Catholic parish access</div>
+    <div style="background:var(--cd);border-radius:4px;padding:8px 10px;border-left:2px solid var(--br)"><strong>8.</strong> Christian student orgs</div>
+  </div>
+  <div style="background:#FAECE7;border-radius:4px;padding:8px 12px;margin-bottom:16px;font-size:11px;color:#712B13;border-left:2px solid #712B13">
+    <strong>DEI subordination penalty:</strong> Schools where spiritual life reports under a DEI/Belonging/Inclusion office receive a negative signal — faith is being treated as a diversity category. Confirmed: Hotchkiss (spiritual life on Pluralism &amp; Community D&amp;I team), Loomis (Christian Fellowship under Center for Inclusive Excellence &amp; Belonging), Choate (Spiritual Life under E&amp;I), Lawrenceville (Religious Life Council on DEI Programs page).
+  </div>
+  <div style="display:flex;gap:16px;margin-bottom:16px;font-size:11px;color:var(--inf)">
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#27500A;display:inline-block"></span>Present / strong</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#444441;display:inline-block"></span>Partial / nominal</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#B4B2A9;display:inline-block"></span>Absent</span>
+  </div>
+  <div class="cv-grid" id="cv"></div>
+</div>
+<div class="sec" id="weights">
+  <div class="stitle">Criteria & Weights</div>
+  <div class="ssub">15 criteria · 111 total weight points</div>
+  <div class="wgrid" id="wg"></div>
+</div>
+<div class="sec" id="method">
+  <div class="stitle">Methodology</div>
+  <div class="ssub">All 15 criteria explained · Head of School / Board trajectory incorporated</div>
+  <div class="fbox">Score = Σ(criterion_score × weight) ÷ Σ(10 × weight) × 100<br><span style="color:rgba(247,244,238,.5);font-size:11px">Normalises to 0–100. Tier 1 ≥60 · Tier 2 50–59 · Tier 3 &lt;50. Within 5pts = effectively tied.</span></div>
+  <div class="sbox">
+    <span style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--inf)">Score colours</span>
+    <div class="sr"><div class="sw" style="background:#DFF0D4"></div>9–10 Strong</div>
+    <div class="sr"><div class="sw" style="background:var(--bll)"></div>7–8 Good</div>
+    <div class="sr"><div class="sw" style="background:var(--cd)"></div>5–6 Adequate</div>
+    <div class="sr"><div class="sw" style="background:var(--rdl)"></div>1–4 Weak</div>
+  </div>
+  <div class="mgrid" id="mg"></div>
+</div>
+<div class="ftr">
+  <span>Boarding School Model v25 · 12 schools · 15 criteria · 111 pts · June 2026 update</span>
+  <span>Eaglebrook families · Fall 2027 entry · Quogue NY</span>
+</div>
+<script>
+function eS(n){if(n>=550&&n<=800)return 10;if(n>=500&&n<=849)return 9;if(n>=450&&n<=899)return 7;if(n>=400&&n<=949)return 5;if(n>=350&&n<=1049)return 4;return 3;}
+function cS(p){if(p<23)return 10;if(p<28)return 9;if(p<33)return 8;if(p<38)return 7;if(p<43)return 6;if(p<48)return 5;if(p<53)return 4;if(p<58)return 3;return 2;}
+
+// ── ALL SCORES ── v25 June 2026 batch update
+// Christian Values changes: Hill 7→8, Deerfield 3→4, Choate 3→2, Hotchkiss 3→2 (DEI sub), Loomis 2→1 (DEI sub), Lawrenceville 6→5 (DEI sub)
+// Traditional Culture changes: Deerfield 4→5 (Austin Framework pivot confirmed)
+const CHR={Exeter:2,Andover:2,"St. Paul's":10,Deerfield:4,Hotchkiss:2,Choate:2,Lawrenceville:5,Taft:2,Loomis:1,"St. George's":9,Hill:8,Salisbury:9};
+const TRAD={Exeter:2,Andover:2,"St. Paul's":4,Deerfield:5,Hotchkiss:4,Choate:3,Lawrenceville:3,Taft:5,Loomis:3,"St. George's":6,Hill:6,Salisbury:9};
+const EB={Exeter:6,Andover:7,"St. Paul's":8,Deerfield:10,Hotchkiss:7,Choate:9,Lawrenceville:5,Taft:4,Loomis:6,"St. George's":3,Hill:4,Salisbury:2};
+const TS={Lawrenceville:9,Choate:8,Taft:8,"St. George's":7,Loomis:7,Hill:6,Hotchkiss:6,Salisbury:6,Deerfield:4,Andover:3,Exeter:2,"St. Paul's":1};
+const TT={Lawrenceville:"2h18",Choate:"2h46",Taft:"3h02","St. George's":"3h19",Loomis:"3h26",Hill:"3h18",Hotchkiss:"3h30",Salisbury:"3h38",Deerfield:"4h13",Andover:"4h53",Exeter:"5h13","St. Paul's":"5h33"};
+const TR={Lawrenceville:"NYC drive",Choate:"Port Jeff ferry",Taft:"Port Jeff ferry","St. George's":"Orient Pt ferry",Loomis:"Port Jeff ferry",Hill:"NYC drive",Hotchkiss:"NYC drive",Salisbury:"NYC drive",Deerfield:"Orient Pt ferry",Andover:"Orient Pt ferry",Exeter:"Orient Pt ferry","St. Paul's":"Orient Pt ferry"};
+const EN={Exeter:{ps:"$1,493K",s:10},Andover:{ps:"$1,222K",s:10},"St. Paul's":{ps:"$1,406K",s:10},Deerfield:{ps:"$1,290K",s:10},Hotchkiss:{ps:"$902K",s:8},Choate:{ps:"$461K",s:5},Lawrenceville:{ps:"$884K",s:8},Taft:{ps:"$690K",s:7},Loomis:{ps:"$472K",s:5},"St. George's":{ps:"$622K",s:6},Hill:{ps:"$309K",s:3},Salisbury:{ps:"$351K",s:4}};
+const PS={Exeter:10,Andover:10,"St. Paul's":9,Deerfield:9,Hotchkiss:8,Choate:9,Lawrenceville:8,Taft:8,Loomis:7,"St. George's":7,Hill:7,Salisbury:6};
+const FA={Exeter:8,Andover:9,"St. Paul's":7,Deerfield:10,Hotchkiss:9,Choate:7,Lawrenceville:10,Taft:7,Loomis:6,"St. George's":6,Hill:5,Salisbury:4};
+const SF={Exeter:8,Andover:9,"St. Paul's":6,Deerfield:10,Hotchkiss:9,Choate:7,Lawrenceville:10,Taft:7,Loomis:6,"St. George's":7,Hill:5,Salisbury:4};
+const SW={Exeter:8,Andover:10,"St. Paul's":4,Deerfield:7,Hotchkiss:5,Choate:8,Lawrenceville:5,Taft:4,Loomis:7,"St. George's":7,Hill:3,Salisbury:3};
+const DIV={Exeter:57,Andover:61,"St. Paul's":48,Deerfield:42,Hotchkiss:39,Choate:48,Lawrenceville:55,Taft:45,Loomis:46,"St. George's":40,Hill:43,Salisbury:22};
+const LAX={Deerfield:10,Lawrenceville:10,Loomis:9,Taft:8,Hill:8,Salisbury:8,Choate:7,"St. Paul's":7,Exeter:6,Andover:6,Hotchkiss:3,"St. George's":3};
+const POLO={Exeter:9,Andover:8,Deerfield:7,Lawrenceville:7,Choate:7,Loomis:7,Hill:8,"St. George's":2,Hotchkiss:2,Salisbury:2,Taft:2,"St. Paul's":2};
+const BOARD={"St. Paul's":10,Hotchkiss:10,Deerfield:9,Salisbury:9,Taft:8,"St. George's":8,Hill:7,Exeter:7,Choate:6,Andover:6,Loomis:5,Lawrenceville:5};
+
+const S={
+  Exeter:{prestige:PS.Exeter,college:9,eagle:EB.Exeter,lax:LAX.Exeter,polo:POLO.Exeter,swim:SW.Exeter,trad:TRAD.Exeter,chr:CHR.Exeter,board:BOARD.Exeter,div:cS(57),fac:FA.Exeter,sfac:SF.Exeter,travel:TS.Exeter,endow:EN.Exeter.s,enroll:eS(1106),loc:"NH",n:1106},
+  Andover:{prestige:PS.Andover,college:9,eagle:EB.Andover,lax:LAX.Andover,polo:POLO.Andover,swim:SW.Andover,trad:TRAD.Andover,chr:CHR.Andover,board:BOARD.Andover,div:cS(61),fac:FA.Andover,sfac:SF.Andover,travel:TS.Andover,endow:EN.Andover.s,enroll:eS(1154),loc:"MA",n:1154},
+  "St. Paul's":{prestige:PS["St. Paul's"],college:9,eagle:EB["St. Paul's"],lax:LAX["St. Paul's"],polo:POLO["St. Paul's"],swim:SW["St. Paul's"],trad:TRAD["St. Paul's"],chr:CHR["St. Paul's"],board:BOARD["St. Paul's"],div:cS(48),fac:FA["St. Paul's"],sfac:SF["St. Paul's"],travel:TS["St. Paul's"],endow:EN["St. Paul's"].s,enroll:eS(540),loc:"NH",n:540},
+  Deerfield:{prestige:PS.Deerfield,college:8,eagle:EB.Deerfield,lax:LAX.Deerfield,polo:POLO.Deerfield,swim:SW.Deerfield,trad:TRAD.Deerfield,chr:CHR.Deerfield,board:BOARD.Deerfield,div:cS(42),fac:FA.Deerfield,sfac:SF.Deerfield,travel:TS.Deerfield,endow:EN.Deerfield.s,enroll:eS(651),loc:"MA",n:651},
+  Hotchkiss:{prestige:PS.Hotchkiss,college:8,eagle:EB.Hotchkiss,lax:LAX.Hotchkiss,polo:POLO.Hotchkiss,swim:SW.Hotchkiss,trad:TRAD.Hotchkiss,chr:CHR.Hotchkiss,board:BOARD.Hotchkiss,div:cS(39),fac:FA.Hotchkiss,sfac:SF.Hotchkiss,travel:TS.Hotchkiss,endow:EN.Hotchkiss.s,enroll:eS(614),loc:"CT",n:614},
+  Choate:{prestige:PS.Choate,college:8,eagle:EB.Choate,lax:LAX.Choate,polo:POLO.Choate,swim:SW.Choate,trad:TRAD.Choate,chr:CHR.Choate,board:BOARD.Choate,div:cS(48),fac:FA.Choate,sfac:SF.Choate,travel:TS.Choate,endow:EN.Choate.s,enroll:eS(860),loc:"CT",n:860},
+  Lawrenceville:{prestige:PS.Lawrenceville,college:8,eagle:EB.Lawrenceville,lax:LAX.Lawrenceville,polo:POLO.Lawrenceville,swim:SW.Lawrenceville,trad:TRAD.Lawrenceville,chr:CHR.Lawrenceville,board:BOARD.Lawrenceville,div:cS(55),fac:FA.Lawrenceville,sfac:SF.Lawrenceville,travel:TS.Lawrenceville,endow:EN.Lawrenceville.s,enroll:eS(820),loc:"NJ",n:820},
+  Taft:{prestige:PS.Taft,college:7,eagle:EB.Taft,lax:LAX.Taft,polo:POLO.Taft,swim:SW.Taft,trad:TRAD.Taft,chr:CHR.Taft,board:BOARD.Taft,div:cS(45),fac:FA.Taft,sfac:SF.Taft,travel:TS.Taft,endow:EN.Taft.s,enroll:eS(580),loc:"CT",n:580},
+  Loomis:{prestige:PS.Loomis,college:6,eagle:EB.Loomis,lax:LAX.Loomis,polo:POLO.Loomis,swim:SW.Loomis,trad:TRAD.Loomis,chr:CHR.Loomis,board:BOARD.Loomis,div:cS(46),fac:FA.Loomis,sfac:SF.Loomis,travel:TS.Loomis,endow:EN.Loomis.s,enroll:eS(742),loc:"CT",n:742},
+  "St. George's":{prestige:PS["St. George's"],college:6,eagle:EB["St. George's"],lax:LAX["St. George's"],polo:POLO["St. George's"],swim:SW["St. George's"],trad:TRAD["St. George's"],chr:CHR["St. George's"],board:BOARD["St. George's"],div:cS(40),fac:FA["St. George's"],sfac:SF["St. George's"],travel:TS["St. George's"],endow:EN["St. George's"].s,enroll:eS(370),loc:"RI",n:370},
+  Hill:{prestige:PS.Hill,college:6,eagle:EB.Hill,lax:LAX.Hill,polo:POLO.Hill,swim:SW.Hill,trad:TRAD.Hill,chr:CHR.Hill,board:BOARD.Hill,div:cS(43),fac:FA.Hill,sfac:SF.Hill,travel:TS.Hill,endow:EN.Hill.s,enroll:eS(527),loc:"PA",n:527},
+  Salisbury:{prestige:PS.Salisbury,college:5,eagle:EB.Salisbury,lax:LAX.Salisbury,polo:POLO.Salisbury,swim:SW.Salisbury,trad:TRAD.Salisbury,chr:CHR.Salisbury,board:BOARD.Salisbury,div:cS(22),fac:FA.Salisbury,sfac:SF.Salisbury,travel:TS.Salisbury,endow:EN.Salisbury.s,enroll:eS(308),loc:"CT",n:308},
+};
+const W={prestige:9,college:9,eagle:3,lax:9,polo:5,swim:4,trad:9,chr:8,board:8,div:7,fac:7,sfac:7,travel:10,endow:5,enroll:5};
+const FLD=['prestige','college','eagle','lax','polo','swim','trad','chr','board','div','fac','sfac','travel','endow','enroll'];
+function tot(k){const d=S[k];let t=0,m=0;for(const f of FLD){t+=(d[f]||0)*W[f];m+=10*W[f];}return m?Math.round(t/m*100):0;}
+function tc(s){return s>=60?'t1':s>=50?'t2':'t3';}
+function tl(s){return s>=60?'Tier 1':s>=50?'Tier 2':'Tier 3';}
+function tcol(s){return s>=60?'var(--gn)':s>=50?'var(--bl)':'var(--am)';}
+function fc2(s){return s>=60?'#1D6B4A':s>=50?'#1B4F8A':'#8A5A1A';}
+function cc(v){return v>=9?'cg':v>=7?'cb':v>=5?'cw':'cr';}
+const HOS={
+  Exeter:"New principal July 2026: Jennifer Karlen Elliott (unknown). Board DEI vision reaffirmed 2025.",
+  Andover:"Kington departing June 2027. $12M DEI endowment is structural — outlasts any head.",
+  "St. Paul's":"Rector Giles stable. 2025 graduation: invoked School Prayer and Love Divine explicitly.",
+  Deerfield:"Austin Framework (2024) — expressive freedom, non-partisanship, intellectual diversity. Mill quote convocation Sept 2025. Most conservative pivot on list. Bruder (successor to Hotchkiss July 2026) spent 4 yrs under Austin.",
+  Hotchkiss:"Bradley retiring June 2026. Successor: Dr. Anne Bruder from Deerfield (dean of academics). Bruder worked directly under Austin — positive trajectory signal.",
+  Choate:"Alex Curtis. Spiritual Life under E&I umbrella. No change signals.",
+  Lawrenceville:"Murray departing June 2027. Successor search in progress (Spencer Stuart). DEI infrastructure fully intact. Strong student Christian orgs (CSO, FCA, OCF).",
+  Taft:"Becker '95 (2023). No rollback of MacMullen-era DEI language. Interestingly worked at FOCUS early in career.",
+  Loomis:"Soja (2024). First commencement 2025. Deep structural DEI — Center for Inclusive Excellence & Belonging.",
+  "St. George's":"Wirtz (2024, new). Explicitly embraces Episcopal identity. Co-lists DEI vision with school prayer. Facilities track record strong (Hackley $115M centre).",
+  Hill:"Devaney (2023). Community service/character formation background. Search committee included Rev. Khristi Adams (spiritual life director).",
+  Salisbury:"Webb (2022). Testified in opposition to CT HB-06804 (2025). SarumBrotherhood, Knights of the Long Table. No DEI language in any public statement. Strongest conservative posture on list.",
+};
+const STR={Exeter:"Prestige · water polo · boys swimming",Andover:"Boys swimming · prestige · facilities","St. Paul's":"Christian values · fully boarding · endowment/student",Deerfield:"Lacrosse · facilities · Eaglebrook feeder",Hotchkiss:"Boarding · sports facilities · prestige",Choate:"Eaglebrook feeder · travel · boys swimming",Lawrenceville:"Lacrosse · facilities · travel",Taft:"Travel · boarding · lacrosse",Loomis:"Lacrosse · travel · water polo","St. George's":"Christian values · boarding · traditional culture",Hill:"Christian values · water polo · lacrosse",Salisbury:"Traditional culture · Christian values · diversity"};
+const ranked=Object.keys(S).sort((a,b)=>tot(b)-tot(a));
+const scores=ranked.map(k=>tot(k));
+document.getElementById('rl').innerHTML=ranked.map((k,i)=>{
+  const s=tot(k),t=tc(s),prev=i>0?scores[i-1]:s,gap=s-prev;
+  const gs=i>0&&gap<0?` <span style="font-size:11px;color:var(--inf)">${gap}</span>`:'';
+  const f=fc2(s);
+  return`<div class="rc ${t}"><div class="rn">${i+1}</div><div><div class="rname">${k}${gs}</div><div class="rmeta">${S[k].loc} · ${S[k].n.toLocaleString()} students · ${STR[k]}</div></div><div><span class="rpill ${t}p">${tl(s)}</span></div><div class="rtrav"><div class="rtscore">${TT[k]}</div><div class="rtroute">${TR[k]}</div></div><div><div class="rscore-n" style="color:${f}">${s}</div><div class="rscore-b"><div class="rscore-f" style="width:${s}%;background:${f}"></div></div></div></div>`;
+}).join('');
+const t1=ranked.filter(k=>tot(k)>=60),t2=ranked.filter(k=>tot(k)>=50&&tot(k)<60),t3=ranked.filter(k=>tot(k)<50);
+function mkT(arr,col,bg,lbl,desc){return`<div class="tb2" style="background:${bg};border-color:${col}"><div style="font-size:11px;font-weight:500;color:${col};margin-bottom:5px">${lbl} · ${desc}</div><div style="font-size:13px;line-height:1.9">${arr.map(k=>`<strong>${k}</strong> <span style="font-size:11px;color:var(--inl)">(${tot(k)})</span>`).join(' &nbsp;·&nbsp; ')}</div></div>`;}
+document.getElementById('tiers').innerHTML=mkT(t1,'#1D6B4A','#E4F0EA','Tier 1 — Strong fit','Consistently high on heaviest criteria')+mkT(t2,'#1B4F8A','#E4EDF7','Tier 2 — Good fit','Solid across the board with one or two real gaps')+mkT(t3,'#8A5A1A','#F5ECD8','Tier 3 — Partial fit','Meaningful misses on highest-weight criteria');
+
+const COLS=[
+  {f:'prestige',l:'Prestige &<br>Select.',w:9,d:true,tip:'Merged: Eight Schools/TSAO standing · acceptance rate · SAT/ACT'},
+  {f:'college',l:'College<br>Place.',w:9,tip:'Ivy and top-25 matriculation rates'},
+  {f:'eagle',l:'Eagle-<br>brook',w:3,tip:'Actual placement data past 10 and 5 years'},
+  {f:'lax',l:'Lax-<br>rosse',w:9,d:true,tip:'USA Lacrosse Week 9 2026 · 3-year record'},
+  {f:'polo',l:'Water<br>Polo',w:5,tip:'NEPSAC results · programme quality'},
+  {f:'swim',l:'Boys<br>Swim',w:4,tip:'NEPSAC D.I/D.II results 2025-26'},
+  {f:'trad',l:'Trad.<br>Culture',w:9,d:true,tip:'Woke quotient inverted + dress code, chapel, forms, prefects, all-boys, grooming, formal meals. Deerfield raised 4→5 (Austin Framework pivot).'},
+  {f:'chr',l:'Christian<br>Values',w:8,tip:'8 sub-criteria incl. DEI subordination screen. Hill raised 7→8; Deerfield 3→4; Choate 3→2; Hotchkiss 3→2 (DEI sub); Loomis 2→1 (DEI sub); Lawrenceville 6→5 (DEI sub). See Christian Values tab.'},
+  {f:'board',l:'Board-<br>ing',w:8,tip:'More boarders = higher score. 0% day = 10'},
+  {f:'div',l:'Diver-<br>sity',w:7,tip:'Lower % students of colour incl. Asian · official 2023-25 profiles'},
+  {f:'fac',l:'Overall<br>Facil.',w:7,d:true,tip:'Academic · residential · dining · arts · capex last 10yr · LEED'},
+  {f:'sfac',l:'Sports<br>Facil.',w:7,tip:'Turf fields · pool · rinks · field house · squash · stadium · track'},
+  {f:'travel',l:'Travel<br>Quogue',w:10,d:true,tip:'Verified drive/ferry times from Quogue NY'},
+  {f:'endow',l:'Endow/<br>Stu.',w:5,tip:'Total endowment ÷ enrollment · financial ballast'},
+  {f:'enroll',l:'Enroll-<br>ment',w:5,tip:'550-800 sweet spot = 10'},
+];
+const grps=[{l:'Academic',c:3,d:true},{l:'Sports',c:3,d:true},{l:'Culture & Values',c:4,d:true},{l:'Facilities',c:2,d:true},{l:'Logistics',c:3,d:true},{l:'Score',c:1,d:true}];
+let hr=`<tr><th class="sk" rowspan="2" style="text-align:left">School</th>`;
+grps.forEach(g=>{hr+=`<th colspan="${g.c}" style="font-size:9px;color:var(--inf);border-bottom:none;padding-bottom:0${g.d?';border-left:1px solid var(--br)':''}">${g.l}</th>`;});
+hr+='</tr><tr>';
+COLS.forEach(c=>{hr+=`<th style="${c.d?'border-left:1px solid var(--br)':''}"><div class="tip">${c.l}<br><span style="font-size:9px;font-weight:300;color:var(--inf)">(${c.w})</span><div class="tb">${c.tip}</div></div></th>`;});
+hr+=`<th class="dl">Score</th></tr>`;
+document.getElementById('mh').innerHTML=hr;
+document.getElementById('mb').innerHTML=ranked.map(k=>{
+  const d=S[k],s=tot(k);
+  let row=`<tr><td class="sk"><div class="sn">${k}</div><div class="sl">${d.loc} · ${d.n.toLocaleString()}</div></td>`;
+  COLS.forEach(c=>{
+    const v=d[c.f]||0;
+    let tip=`${v}/10`;
+    if(c.f==='endow')tip=`${EN[k]?.ps||''} · ${v}/10`;
+    else if(c.f==='travel')tip=`${TT[k]} · ${TR[k]}`;
+    else if(c.f==='div')tip=`${DIV[k]}% · ${v}/10`;
+    else if(c.f==='chr')tip=`Chr values ${v}/10 — see Christian Values tab`;
+    else if(c.f==='trad')tip=`Trad culture ${v}/10 — ${HOS[k].substring(0,80)}`;
+    row+=`<td style="${c.d?'border-left:1px solid var(--br)':''}"><div class="tip"><span class="cell ${cc(v)}">${v}</span><div class="tb">${tip}</div></div></td>`;
+  });
+  row+=`<td class="dl"><span class="sc" style="color:${tcol(s)}">${s}</span></td></tr>`;
+  return row;
+}).join('');
+
+const CVD=[
+  {name:"St. Paul's",loc:"Concord NH",score:10,c:"#E4F0EA",tc:"#085041",rows:[
+    {l:"Active Episcopal affiliation — NAES member, ordained priests, actively embraced",m:"strong"},
+    {l:"Chapel content: full Episcopal liturgy 4x/week, ordained-led worship and prayer",m:"strong"},
+    {l:"Ordained Episcopal priests on staff — Rev. Chuck Wynder named on website",m:"strong"},
+    {l:"Jesus Christ named directly in school prayer — recited at every service",m:"strong"},
+    {l:"Faith integrated into core mission — Chapel Programme required alongside athletics",m:"strong"},
+    {l:"FOCUS: confirmed active — listed on chapel programme page",m:"strong"},
+    {l:"Catholic access: St. John's ~1.5mi · ordained chaplains facilitate multi-faith access",m:"strong"},
+    {l:"Student orgs: Chapel Council (student-led), multiple faith small groups",m:"strong"},
+  ],note:"Perfect score. Strongest Christian school on the list. 2025 graduation address: Rector Giles explicitly invoked the School Prayer and 'Love Divine' — faith language is active and primary, not ceremonial.",dei:"Independent — Chapel Programme reports directly through ordained priests. Completely standalone."},
+  {name:"St. George's",loc:"Newport RI",score:9,c:"#E4F0EA",tc:"#085041",rows:[
+    {l:"Active Episcopal affiliation — NAES member, named in admissions identity",m:"strong"},
+    {l:"Chapel content: Thu = full Episcopal liturgy; Tue = prayers + communal singing",m:"strong"},
+    {l:"Ordained clergy on staff",m:"strong"},
+    {l:"Head recites Christian School Prayer ('Almighty God…') at every service",m:"strong"},
+    {l:"Christmas Festival annual tradition; Episcopal identity front-and-centre",m:"strong"},
+    {l:"FOCUS: not confirmed as campus chapter",m:"partial"},
+    {l:"Catholic access: St. Lucy's ~2mi Middletown · access not confirmed by school",m:"partial"},
+    {l:"Student orgs: sixth-formers lead Tuesday services — structured student chapel leadership",m:"strong"},
+  ],note:"Very strong. Head Wirtz explicitly names Episcopal foundations as a school strength. Thursday chapel is unambiguously Christian worship.",dei:"Independent — Spiritual Life and Episcopal identity are primary admissions-facing elements, not subordinated to any DEI office."},
+  {name:"Salisbury",loc:"Salisbury CT",score:9,c:"#E4F0EA",tc:"#085041",rows:[
+    {l:"Active Episcopal affiliation — four crosses on crest, actively embraced",m:"strong"},
+    {l:"Chapel content: hymn, responsive reading, prayer, chapel talk, acolytes Tue & Fri",m:"strong"},
+    {l:"Ordained clergy implied by vestry/acolyte structure; school chaplain named",m:"partial"},
+    {l:"'All sacred core values emanate from the Chapel' — confirmed in institutional materials",m:"strong"},
+    {l:"Gospel choir; Hanging of the Greens; Service of Nine Lessons and Carols",m:"strong"},
+    {l:"FOCUS: not confirmed — small school, may be reached by regional ministry",m:"partial"},
+    {l:"Catholic access: St. Joseph ~4mi Canaan CT · Sunday shuttle confirmed",m:"strong"},
+    {l:"Student orgs: Student Vestry — formally structured leaders, readers, acolytes, ushers",m:"strong"},
+  ],note:"Head Will Webb testified in CT legislature defending all-boys model (2025). No DEI language in any public statement. 2025 graduation framed entirely around SarumBrotherhood.",dei:"Independent — Chapel is described as the 'heart and soul' of the school. Completely standalone from any DEI office."},
+  {name:"Hill",loc:"Pottstown PA",score:8,c:"#E4EDF7",tc:"#0C447C",rows:[
+    {l:"Formally 'nonsectarian' — Lutheran-inspired founding actively embraced in practice",m:"partial"},
+    {l:"Chapel: explicitly 'nondenominational Christian' 2x/week; Ash Wed, Maundy Thu, Advent observed",m:"strong"},
+    {l:"Ordained clergy — Rev. Khristi Adams named on Hill's spiritual life page",m:"strong"},
+    {l:"Philippians 4:8 as active motto — Christian scripture used daily, not vestigial",m:"strong"},
+    {l:"Christian calendar formally observed; Catholic Mass arranged on Holy Days",m:"strong"},
+    {l:"FOCUS: confirmed active and weekly — explicitly listed on Hill's own spiritual life page",m:"strong"},
+    {l:"Catholic access: St. Aloysius ~1mi Pottstown · Hill arranges transport on Holy Days",m:"strong"},
+    {l:"Student orgs: FOCUS weekly + Spiritual Life Committee student group",m:"strong"},
+  ],note:"Raised 7→8. Most Christian in practice of any 'nonsectarian' school. Head Devaney's search committee included Rev. Adams — institutional alignment. FOCUS confirmed. Catholic Mass arranged on Holy Days.",dei:"Independent — Spiritual Life Programme reports through Rev. Adams directly. No structural connection to any DEI office found."},
+  {name:"Lawrenceville",loc:"Lawrenceville NJ",score:5,c:"#E4EDF7",tc:"#0C447C",rows:[
+    {l:"Presbyterian founding — historical only, not actively embraced in current identity",m:"partial"},
+    {l:"Chapel content: main assembly secular; Episcopal Eucharist + Catholic Mass supplemental",m:"partial"},
+    {l:"Ordained clergy on staff",m:"strong"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"Multi-faith framing predominates; Christianity not foregrounded",m:"absent"},
+    {l:"FOCUS: not confirmed as campus chapter",m:"partial"},
+    {l:"Catholic access: BEST ON LIST — weekly on-campus Catholic Mass + all Holy Days observed on campus",m:"strong"},
+    {l:"Student orgs: CSO (Catholic), FCA (Fellowship of Christian Athletes), OCF (Orthodox) — richest Christian org ecosystem on list",m:"strong"},
+  ],note:"Lowered 6→5 (DEI subordination). Religious Life Council appears on DEI Programs page — faith framed as diversity category. Murray's baccalaureate addresses ('On Trust,' 'On Leading') are literary-humanistic but DEI infrastructure is institutional.",dei:"⚠️ SUBORDINATED — Religious Life Council appears on Lawrenceville's DEI Programs & Initiatives page. RLC framing: providing visibility for religion's 'strength and diversity.' Faith treated as a diversity category, not a primary institutional value."},
+  {name:"Deerfield",loc:"Deerfield MA",score:4,c:"#F1EFE8",tc:"#444441",rows:[
+    {l:"No formal religious affiliation — nonsectarian, founding not actively embraced",m:"absent"},
+    {l:"Chapel content: secular community gatherings — speakers, music, presentations",m:"absent"},
+    {l:"Lay chaplain (not ordained)",m:"partial"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"No faith integration in daily culture",m:"absent"},
+    {l:"FOCUS: confirmed historically — 40-year faculty-led Christian Fellowship, FOCUS staff alumni produced",m:"partial"},
+    {l:"Catholic access: St. James ~7mi Greenfield MA · rural, no school facilitation confirmed",m:"partial"},
+    {l:"Student orgs: Christian Fellowship (historical — current status unclear)",m:"partial"},
+  ],note:"Raised 3→4. Secular school but meaningful historical FOCUS presence. Head Austin is the most intellectually conservative head on the list (Framework for Schools 2024). Dr. Bruder (new Hotchkiss head July 2026) spent 4 years under Austin.",dei:"Partial — Deerfield has DEI language in head communications but chaplaincy appears structurally separate from the formal DEI office. No explicit subordination found."},
+  {name:"Hotchkiss",loc:"Lakeville CT",score:2,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No formal religious affiliation",m:"absent"},
+    {l:"Chapel content: secular assembly — speakers, performances, announcements",m:"absent"},
+    {l:"Lay chaplain (not ordained)",m:"partial"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"No faith integration in daily culture",m:"absent"},
+    {l:"FOCUS: not confirmed",m:"absent"},
+    {l:"Catholic access: St. Mary ~1mi Lakeville CT · no school facilitation mentioned",m:"partial"},
+    {l:"Student orgs: no Christian student organisations found",m:"absent"},
+  ],note:"Lowered 3→2 (DEI subordination). Spiritual life director sits on Pluralism & Community D&I team. Bradley retiring June 2026. Successor: Dr. Anne Bruder from Deerfield (Austin's dean of academics) — positive trajectory signal for 2026-27.",dei:"⚠️ SUBORDINATED — Director of Religious and Spiritual Life quoted on Hotchkiss D&I page as member of the 'Pluralism and Community team.' Spiritual life is structurally a D&I function. OPC rebrand (Sept 2025) is cosmetic — student newspaper confirmed same work continues."},
+  {name:"Choate",loc:"Wallingford CT",score:2,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No formal religious affiliation",m:"absent"},
+    {l:"Chapel content: Spiritual Life sits under E&I umbrella — secular and pluralist",m:"absent"},
+    {l:"No ordained clergy",m:"absent"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"Spiritual Life reframed under DEI umbrella — actively antithetical to Christian framing",m:"absent"},
+    {l:"FOCUS: not confirmed; E&I framing makes campus Christian group unlikely",m:"absent"},
+    {l:"Catholic access: St. Paul ~0.5mi Wallingford · no facilitation mentioned by school",m:"partial"},
+    {l:"Student orgs: no Christian student organisations found",m:"absent"},
+  ],note:"Lowered 3→2 (DEI subordination). Choate's own E&I page explicitly places Spiritual Life team under the E&I umbrella. This was a deliberate institutional decision. No change signals.",dei:"⚠️ SUBORDINATED — choate.edu/about/equity-and-inclusion explicitly states Spiritual Life team sits within the E&I umbrella. This is the most explicit Spiritual Life–under–DEI structure on the list."},
+  {name:"Loomis",loc:"Windsor CT",score:1,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No formal religious affiliation",m:"absent"},
+    {l:"Chapel content: no chapel programme of any kind",m:"absent"},
+    {l:"No ordained clergy",m:"absent"},
+    {l:"No Christian language in motto, prayer, or crest",m:"absent"},
+    {l:"Required anti-racist faculty readings; secular progressive culture",m:"absent"},
+    {l:"FOCUS: not confirmed",m:"absent"},
+    {l:"Catholic access: St. Genevieve ~2mi Windsor CT · no facilitation mentioned",m:"partial"},
+    {l:"Student orgs: LC Christian Fellowship listed under Center for Inclusive Excellence & Belonging — faith = diversity category",m:"absent"},
+  ],note:"Lowered 2→1 (deepest DEI subordination on list). LC Christian Fellowship listed on the Belonging Center's student org page alongside racial affinity groups. Faith has been formally categorised as an identity group. No FOCUS, no chapel.",dei:"⚠️ SUBORDINATED — LC Christian Fellowship appears on loomischaffee.org/about/inclusive-excellence-belonging/student-organizations-affinity-groups alongside racial and identity affinity groups. Faith explicitly categorised as belonging/diversity category."},
+  {name:"Taft",loc:"Waterbury CT",score:2,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No formal religious affiliation",m:"absent"},
+    {l:"Chapel content: Woodward Chapel used as arts/performance venue — confirmed secular",m:"absent"},
+    {l:"No ordained clergy",m:"absent"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"No faith integration in daily culture",m:"absent"},
+    {l:"FOCUS: not confirmed. Note: Head Becker worked at FOCUS early in career (pre-boarding school)",m:"partial"},
+    {l:"Catholic access: St. John ~3mi Waterbury CT · no facilitation mentioned",m:"partial"},
+    {l:"Student orgs: no Christian student organisations found",m:"absent"},
+  ],note:"No change. Woodward Chapel is the clearest example of chapel-as-auditorium. Head Becker has a FOCUS background (pre-career) but no Christian institutional signals. MacMullen-era DEI language retained in 2024-25 handbook.",dei:"Neutral — No explicit DEI subordination of spiritual life found, but also no meaningful spiritual life programme to subordinate."},
+  {name:"Andover",loc:"Andover MA",score:2,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No active religious affiliation — Phillips founding (1778) not embraced in any current way",m:"absent"},
+    {l:"Chapel content: Cochran Chapel functions as auditorium for secular assemblies and events",m:"absent"},
+    {l:"No ordained clergy",m:"absent"},
+    {l:"$12M DEI endowment; anti-racism as institutional mission — actively antithetical",m:"absent"},
+    {l:"Strongly secular progressive institutional culture; no Christian identity",m:"absent"},
+    {l:"FOCUS: not confirmed; institutional culture makes active chapter highly unlikely",m:"absent"},
+    {l:"Catholic access: St. Augustine ~0.8mi Andover MA · no facilitation mentioned",m:"partial"},
+    {l:"Student orgs: no Christian student organisations found",m:"absent"},
+  ],note:"No change. $12M DEI endowment is structural — outlasts any head. Kington 2025 commencement: AI, mental health, social media framing. Less fiery than 2020 but architecture unchanged.",dei:"⚠️ SUBORDINATED — AATF infrastructure and anti-racist institutional mission make any faith programme a subordinated element by default. No independent chaplaincy or spiritual life office found."},
+  {name:"Exeter",loc:"Exeter NH",score:2,c:"#FAECE7",tc:"#712B13",rows:[
+    {l:"No active religious affiliation — Phillips Exeter founding (1781) not embraced",m:"absent"},
+    {l:"Chapel content: Assembly Hall — secular; JEDI programmes; no Christian content",m:"absent"},
+    {l:"No ordained clergy",m:"absent"},
+    {l:"No Christian language in active motto, prayer, or crest",m:"absent"},
+    {l:"Most progressive institutional posture on list — JEDI, board DEI vision reaffirmed 2025",m:"absent"},
+    {l:"FOCUS: not confirmed; institutional culture makes active chapter highly unlikely",m:"absent"},
+    {l:"Catholic access: St. Michael ~0.4mi — walkable · no school facilitation mentioned",m:"partial"},
+    {l:"Student orgs: no Christian student organisations found",m:"absent"},
+  ],note:"No change. Board-level DEI vision adopted 2018, reaffirmed 2025. Exeter also exports DEI frameworks via Diversity Leadership Institute. New principal Jennifer Karlen Elliott starts July 2026 — inherits committed board.",dei:"⚠️ SUBORDINATED — Board-level DEI vision statement is the dominant institutional framework. Any spiritual life is subordinated by default. Exeter's EDLI (Equity, Diversity, Leadership, Inclusion) office is the institutional identity anchor."},
+];
+function dc(m){return m==='strong'?'#27500A':m==='partial'?'#444441':'#B4B2A9';}
+function ck(m){return m==='strong'?'✓':m==='partial'?'◐':'–';}
+function cc2(m){return m==='strong'?'#27500A':m==='partial'?'#888780':'#B4B2A9';}
+document.getElementById('cv').innerHTML=CVD.map(s=>`<div class="cv-card" style="border-left:2px solid ${s.tc}"><div class="cv-hdr"><div><div class="cv-name">${s.name}</div><div class="cv-loc">${s.loc}</div></div><div class="cv-badge" style="background:${s.c};color:${s.tc}">${s.score}/10</div></div><div class="cv-rows">${s.rows.map((r,i)=>`<div class="cv-row"><div class="cv-dot" style="background:${dc(r.m)}"></div><div class="cv-label"><span class="cv-num">${i+1}.</span>${r.l}</div><div class="cv-chk" style="color:${cc2(r.m)}">${ck(r.m)}</div></div>`).join('')}</div><div class="cv-div"></div><div class="cv-note">${s.note}</div><div style="margin-top:5px;font-size:10px;padding:5px 8px;border-radius:3px;background:${s.dei.startsWith('⚠️')?'#FAECE7':'var(--cd)'};color:${s.dei.startsWith('⚠️')?'#712B13':'var(--inl)'};">${s.dei}</div></div>`).join('');
+const CATS=[
+  {n:'Academic & Prestige',c:'#1B4F8A',items:[{l:'Prestige & selectivity',s:'Eight Schools/TSAO standing · acceptance rate · SAT/ACT · merged criterion',w:9},{l:'College placement',s:'Ivy and top-25 matriculation rates',w:9},{l:'Eaglebrook feeder',s:'Actual placement data past 10 and 5 years',w:3}]},
+  {n:'Sports',c:'#1D6B4A',items:[{l:'Lacrosse',s:'USA Lacrosse Week 9 2026 · 3-year win-loss records',w:9},{l:'Water polo',s:'NEPSAC results · programme quality',w:5},{l:'Boys swimming',s:'NEPSAC D.I/D.II championship results 2025-2026',w:4}]},
+  {n:'Culture & Values',c:'#5A3A8A',items:[{l:'Traditional culture',s:'Woke quotient inverted + dress code, chapel, forms, prefects, all-boys, grooming, formal meals. Deerfield raised 4→5 (Austin Framework for Schools 2024).',w:9},{l:'Christian values',s:'8 sub-criteria: active affiliation · chapel faith content · ordained clergy · active Christian language · faith culture · FOCUS · Catholic access · Christian student orgs. DEI subordination screen applied. See Christian Values tab.',w:8},{l:'Low % day students',s:'More boarders = higher score. Fully residential = 10.',w:8},{l:'Lower % students of colour',s:'Includes Asian · official 2023-25 profiles · total enrollment basis',w:7}]},
+  {n:'Facilities',c:'#6B3A1D',items:[{l:'Overall facilities',s:'Academic · residential · dining · arts · capex last 10yr · LEED · sq footage/student',w:7},{l:'Sports facilities',s:'Turf fields & lighting · pool · rinks · field house · squash · recent sports capex · stadium · track',w:7}]},
+  {n:'Resources & Logistics',c:'#8A5A1A',items:[{l:'Travel from Quogue NY',s:'Verified door-to-school times · Port Jeff→Bridgeport or Orient Pt→New London ferry routes',w:10},{l:'Endowment per student',s:'Financial ballast: ≥$1M=10 · $800K=8 · $600K=7 · $500K=6 · $400K=5 · $300K=4',w:5},{l:'Enrollment',s:'550-800 sweet spot = 10 · bell curve above and below',w:5}]},
+];
+const totalPts=Object.values(W).reduce((a,b)=>a+b,0);
+document.getElementById('wg').innerHTML=CATS.map(cat=>{
+  const catPts=cat.items.reduce((s,x)=>s+x.w,0);
+  return`<div class="wcard"><div class="wcat" style="color:${cat.c}">${cat.n} — ${catPts} pts (${Math.round(catPts/totalPts*100)}%)</div>${cat.items.map(it=>`<div class="wr"><div class="wl"><div class="wn">${it.l}</div><div class="ws">${it.s}</div></div><div class="wri"><div class="wnum" style="color:${cat.c}">${it.w}</div><div class="wbar"><div class="wfill" style="width:${Math.round(it.w/10*100)}%;background:${cat.c}"></div></div></div></div>`).join('')}<div class="wtot"><span>Category total</span><span style="font-weight:500">${catPts} / ${totalPts} pts</span></div></div>`;
+}).join('');
+const METHOD=[
+  {t:'1. Prestige & selectivity',b:'<b>Weight: 9 · Merged.</b> Eight Schools/TSAO membership, acceptance rate, median SAT/ACT. Exeter and Andover = 10. Salisbury = 6.'},
+  {t:'2. College placement',b:'<b>Weight: 9.</b> Ivy and top-25 matriculation rates from each school\'s most recent published report. Exeter, Andover, St. Paul\'s = 9. Salisbury = 5.'},
+  {t:'3. Eaglebrook feeder',b:'<b>Weight: 3.</b> Eaglebrook graduates enrolling at each school over 10 and 5 years. Deerfield = 10 (83/38). Salisbury = 2. Weight kept low — pipeline, not quality.'},
+  {t:'4. Lacrosse',b:'<b>Weight: 9.</b> USA Lacrosse Week 9 2026 rankings cross-referenced with 3-year records (2023-25). Deerfield and Lawrenceville = 10. Hotchkiss and St. George\'s = 3.'},
+  {t:'5. Water polo',b:'<b>Weight: 5.</b> NEPSAC results, programme history, coaching. Exeter = 9 (multiple Olympians). Hill = 8. Most others = 2.'},
+  {t:'6. Boys swimming',b:'<b>Weight: 4.</b> NEPSAC D.I/D.II championships 2025-2026. Andover = 10 (9 consecutive D.I titles). Choate and Exeter = 8. Salisbury and Hill = 3.'},
+  {t:'7. Traditional culture',b:'<b>Weight: 9.</b> Composite of woke quotient (inverted) plus positive signals: all-boys, jacket/tie, grooming code, Saturday classes, prefects, formal meals, Forms, Honor Code, Latin motto, required chapel, study hall. <b>June 2026 update:</b> Deerfield raised 4→5 on strength of Austin\'s "Thriving in a World of Pluralistic Contention" Framework (May 2024, Edward E. Ford Foundation) — explicit call for expressive freedom, non-partisanship, intellectual diversity. Fall 2025 convocation opened with John Stuart Mill quote. Most documented conservative pivot of any secular school head on the list. Salisbury = 9. Exeter and Andover = 2.'},
+  {t:'8. Christian values',b:'<b>Weight: 8.</b> Eight verified sub-criteria: (1) Active religious affiliation — Episcopal/Lutheran ongoing embrace; (2) Faith content of chapel — actual Christian content, not secular assembly; (3) Ordained clergy on staff; (4) Christian language actively used in prayer, motto, or crest; (5) Faith integration in daily culture; (6) FOCUS on campus; (7) Catholic parish proximity and school facilitation; (8) Christian student organisations (CSO, FCA, vestry, Bible study). DEI subordination screen applied — schools where spiritual life reports under a DEI/Belonging/Pluralism office receive a penalty. <b>June 2026 updates:</b> Hill 7→8 (confirmed nondenominational Christian chapel, FOCUS weekly, Holy Days arranged); Deerfield 3→4 (40-year FOCUS history documented); Choate 3→2 (Spiritual Life under E&I); Hotchkiss 3→2 (spiritual life director on Pluralism & Community D&I team); Loomis 2→1 (Christian Fellowship under Center for Inclusive Excellence & Belonging); Lawrenceville 6→5 (Religious Life Council on DEI Programs page). See Christian Values tab for full per-school breakdown.'},
+  {t:'9. Low % day students',b:'<b>Weight: 8.</b> Day student percentage, inverted. St. Paul\'s = 10 (0% day). Hotchkiss = 10 (~2%). Lawrenceville = 5 (~31%). Loomis = 5 (~30%).'},
+  {t:'10. Lower % students of colour',b:'<b>Weight: 7.</b> Total students of colour as % of enrollment, including Asian. Salisbury = 10 (22%). Andover = 2 (61%). Exeter = 3 (57%).'},
+  {t:'11. Overall facilities',b:'<b>Weight: 7.</b> Academic building recency, residential comfort, dining, arts, capex last 10yr, LEED, sq footage/student. Deerfield and Lawrenceville = 10. Salisbury = 4.'},
+  {t:'12. Sports facilities',b:'<b>Weight: 7.</b> Turf fields and lighting, pool, ice rinks, field house, squash, stadium, track. Deerfield and Lawrenceville = 10. Salisbury = 4.'},
+  {t:'13. Travel from Quogue NY',b:'<b>Weight: 10 — highest criterion.</b> Port Jeff→Bridgeport (2h24) or Orient Pt→New London (2h23) ferry routes. 10=&lt;2h30 · 9=&lt;2h45 · 8=&lt;3h10 · 7=&lt;3h30 · 6=&lt;3h45 · 4=&lt;4h30 · 3=&lt;5h · 2=&lt;5h30 · 1=5h30+. Lawrenceville = 9 (2h18). St. Paul\'s = 1 (5h33).'},
+  {t:'14. Endowment per student',b:'<b>Weight: 5.</b> Total endowment ÷ enrollment. ≥$1M=10 · $800K=8 · $600K=7 · $500K=6 · $400K=5 · $300K=4 · &lt;$300K=3. Exeter = 10 ($1.49M). Hill = 3 ($309K).'},
+  {t:'15. Enrollment',b:'<b>Weight: 5.</b> 550-800 sweet spot = 10. Bell curve. Deerfield, Taft, Hotchkiss = 10. Exeter and Andover = 3. Salisbury = 3.'},
+  {t:'Head of School / Board intelligence',b:'<b>June 2026 addition.</b> Head of school statements, graduation addresses, and board-level decisions are now a primary intelligence source for trajectory assessment. Key signals: <b>Deerfield (Austin)</b> — Framework for Schools 2024 is the most documented conservative pivot on the list; trad culture raised accordingly. <b>Salisbury (Webb)</b> — CT legislative testimony defending all-boys model 2025; strongest conservative posture. <b>Hotchkiss</b> — successor Dr. Anne Bruder (from Deerfield, Austin\'s dean of academics) starts July 2026; positive trajectory signal. <b>Lawrenceville</b> — Murray departing June 2027; successor search in progress (Spencer Stuart). <b>Exeter</b> — Board DEI vision reaffirmed March 2025; new principal Elliott inherits committed board. <b>Andover</b> — $12M DEI endowment is structural, outlasts Kington (departing June 2027). <b>Graduation addresses reviewed 2025:</b> Giles (SPS) — School Prayer and Love Divine explicitly invoked; Austin (Deerfield) — warm community language, chose Kravis (courage/curiosity/independence) as speaker; Murray (Lawrenceville) — literary-humanistic "On Leading," no DEI framing in oratory; Soja (Loomis) — roots and belonging framing.'},
+];
+document.getElementById('mg').innerHTML=METHOD.map(m=>`<div class="mcard"><div class="mtitle">${m.t}</div><div class="mbody">${m.b}</div></div>`).join('');
+function show(id,btn){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');btn.classList.add('on');}
+</script>
+</body>
+</html>
